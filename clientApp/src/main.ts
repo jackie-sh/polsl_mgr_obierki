@@ -8,5 +8,18 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+export function getBaseUrl() {
+  return"http://127.0.0.1:8000/";
+}
+
+export function getBaseApiUrl() {
+  return getBaseUrl() + "api";
+}
+
+const providers = [
+  { provide: "BASE_URL", useFactory: getBaseUrl, deps: [] },
+  { provide: "BASE_API_URL", useFactory: getBaseApiUrl, deps: [] },
+];
+
+platformBrowserDynamic(providers).bootstrapModule(AppModule)
   .catch(err => console.error(err));
