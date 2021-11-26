@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Route } from "@angular/router";
+import { AboutComponent } from './views/about/about.component';
 import { HomeComponent } from './views/home/home.component';
 
 
@@ -10,6 +11,14 @@ const routes: Route[] = [
     data: {
       title: "Strona główna",
       breadcrumbs: "Strona główna",
+    },
+  },
+  {
+    path: "about",
+    component: AboutComponent,
+    data: {
+      title: "O nas",
+      breadcrumbs: "O nas",
     },
   },
   {

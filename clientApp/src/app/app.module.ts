@@ -7,6 +7,10 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoaderComponent } from './shared/loader/loader.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AboutComponent } from './views/about/about.component';
+
 
 @NgModule({
   declarations: [
@@ -14,12 +18,16 @@ import { LoaderComponent } from './shared/loader/loader.component';
     NavbarComponent,
     FooterComponent,
     HomeComponent,
-    LoaderComponent
+    LoaderComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    NoopAnimationsModule,
+    ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

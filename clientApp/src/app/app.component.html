@@ -1,12 +1,20 @@
-<div class="main-root">
-    <div id="page-container">
-        <div id="content-wrap">
-            <app-navbar></app-navbar>
-            <router-outlet></router-outlet>
-        </div>
-        <footer id="footer">
-            <app-footer></app-footer>
-        </footer>
+<div class="main-root background-image-portal">
+  <div id="page-container">
+    <div id="content-wrap">
+      <app-navbar></app-navbar>
+      <div class="container-fluid container-fluid-width">
+        <router-outlet></router-outlet>
       </div>
+    </div>
+    <footer id="footer">
+      <app-footer></app-footer>
+    </footer>
+  </div>
 </div>
 <app-loader></app-loader>
+
+<div hidden>
+  <!-- pre-load big images -->
+  <img src="../../../../assets/auth-login.jpg" />
+  <img src="../../../../assets/auth-registerjpg" />
+</div>

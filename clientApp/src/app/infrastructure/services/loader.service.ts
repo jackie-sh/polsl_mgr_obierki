@@ -22,7 +22,7 @@ export class LoaderService {
       this.isHidden = true;
       setTimeout(() => {
         this.isVisible = false;
-      }, 200);
+      }, 500);
     })
   }
 }

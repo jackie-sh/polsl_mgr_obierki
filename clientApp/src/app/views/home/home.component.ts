@@ -11,7 +11,7 @@ export class HomeComponent implements OnInit {
   constructor(private loaderService: LoaderService) { }
 
   ngOnInit(): void {
-    this.loaderService.show();
+  //  this.loaderService.show();
   }
 
 }
