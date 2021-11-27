@@ -31,6 +31,15 @@ const routes: Route[] = [
     },
   },
   {
+    path: "recipe",
+    loadChildren: () => 
+    import("./views/recipes/recipe.module").then((m) => m.RecipeModule),
+    data: {
+      title: "Przepisy",
+      breadcrumbs: null,
+    },
+  },
+  {
     path: "",
     redirectTo: "home",
     pathMatch: "full",

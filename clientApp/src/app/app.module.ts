@@ -8,9 +8,11 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutComponent } from './views/about/about.component';
-
+import { CreateRecipeComponent } from './views/recipes/create-recipe/create-recipe.component';
+import { ConfirmationComponent } from './shared/confirmation/confirmation.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { AboutComponent } from './views/about/about.component';
     FooterComponent,
     HomeComponent,
     LoaderComponent,
-    AboutComponent
+    AboutComponent,
+    CreateRecipeComponent,
+    ConfirmationComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,8 +32,9 @@ import { AboutComponent } from './views/about/about.component';
     NoopAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
+    EditorModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
