@@ -1,0 +1,64 @@
+<section class="py-5">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-12">
+        <div
+          class="card shadow-card swing-in-top-fwd"
+          style="border-radius: 1rem"
+        >
+          <div class="card-body p-4 p-lg-5 text-black">
+            <div class="row pb-2">
+              {{ recipe.title }}
+            </div>
+            <div class="image-container mx-auto d-block pt-4">
+              <div class="text-center">
+                <img
+                  [src]="mainImageSrc"
+                  alt="Główny obraz przepisu"
+                  class="fit-image img-responsive"
+                />
+              </div>
+            </div>
+            <!-- recipe -->
+            <div
+              class="row px-md-5 px-3 pt-5 single-recipe-container"
+              style="
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                max-width: 100%;
+                margin-left: 0.1em;
+              "
+            >
+              <div class="w-100 theme-filter" #recipeContainer></div>
+            </div>
+            <div
+              class="px-md-5 px-3 single-recipe-container"
+              style="max-width: 100%"
+            >
+              <ng-container *ngTemplateOutlet="content"></ng-container>
+            </div>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--article data-->
+<ng-template #content>
+  <div class="row pt-2">
+    <ng-container *ngIf="article.author != null">
+      <p>Autor: {{ article.author }}</p>
+    </ng-container>
+  </div>
+  <div class="date">
+    <div class="row">
+      <p>
+        <ng-container *ngIf="article.createdDate != null">
+          Utworzono: {{ article.createdDate | date: "dd/MM/yyyy" }} <br />
+        </ng-container>
+      </p>
+    </div>
+  </div>
+</ng-template>

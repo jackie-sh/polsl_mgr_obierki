@@ -13,6 +13,7 @@ import { AboutComponent } from './views/about/about.component';
 import { CreateRecipeComponent } from './views/recipes/create-recipe/create-recipe.component';
 import { ConfirmationComponent } from './shared/confirmation/confirmation.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { NgbModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     ReactiveFormsModule,
     FormsModule,
     EditorModule,
+    NgbModule,
+    NgbRatingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

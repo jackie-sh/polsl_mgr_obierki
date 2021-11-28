@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {CreateRecipeComponent} from './create-recipe/create-recipe.component';
+import { RecipeComponent } from './recipe/recipe.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,13 @@ const routes: Routes = [
     component: CreateRecipeComponent,
     data: {
       title: "Edytuj przepis",
+    },
+  },
+  {
+    path: "/:id",
+    component: RecipeComponent,
+    data: {
+      title: "Przepis kulinarny",
     },
   },
   {
