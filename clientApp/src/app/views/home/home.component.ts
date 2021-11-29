@@ -13,5 +13,4 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   //  this.loaderService.show();
   }
-currentRate = 10
 }

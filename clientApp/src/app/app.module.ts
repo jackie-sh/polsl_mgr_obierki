@@ -14,6 +14,9 @@ import { CreateRecipeComponent } from './views/recipes/create-recipe/create-reci
 import { ConfirmationComponent } from './shared/confirmation/confirmation.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgbModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { RecipesListComponent } from './views/recipes/recipes-list/recipes-list.component';
+import { UserSiteComponent } from './views/user/user-site/user-site.component';
+import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { NgbModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
     LoaderComponent,
     AboutComponent,
     CreateRecipeComponent,
+    RecipesListComponent,
     ConfirmationComponent,
+    UserSiteComponent,
+    MyProfileComponent,
   ],
   imports: [
     BrowserModule,

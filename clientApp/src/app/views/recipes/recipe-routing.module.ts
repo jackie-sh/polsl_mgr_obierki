@@ -12,6 +12,13 @@ const routes: Routes = [
     },
   },
   {
+    path: "list-recipe",
+    component: CreateRecipeComponent,
+    data: {
+      title: "Lista przepisów",
+    },
+  },
+  {
     path: "create-recipe/:id",
     component: CreateRecipeComponent,
     data: {

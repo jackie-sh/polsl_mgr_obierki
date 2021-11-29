@@ -6,6 +6,8 @@ import { timeout } from 'rxjs/operators';
 import { CreateRecipeModel } from 'src/app/infrastructure/models/createRecipe.model';
 import { RecipeFileUploadModel } from 'src/app/infrastructure/models/RecipeFileUpload.model';
 import { ViewRecipeModel } from '../models/view-recipe.model';
+import { RecipeListItemModel } from '../models/recipe-list-item.model';
+import { RecipeListModel } from '../models/recipe-list.model';
 
 declare var tinyMCE: any;
 
@@ -22,7 +24,9 @@ export class RecipesService {
   ) {}
 
   getRecipeForUpdate = (id: string): Observable<CreateRecipeModel> => {
-    return this.http.get<CreateRecipeModel>(`${this.baseApiUrl}/recipe-edit/${id}`);
+    return this.http.get<CreateRecipeModel>(
+      `${this.baseApiUrl}/recipe-edit/${id}`
+    );
   };
 
   postRecipe = (model: CreateRecipeModel): Observable<Response> => {
@@ -40,11 +44,16 @@ export class RecipesService {
     );
   };
 
-  getRecipeSinglePortal = (
-    id: string
-  ): Observable<ViewRecipeModel> => {
-    return this.http.get<ViewRecipeModel>(
-      `${this.baseApiUrl}/recipe/${id}`
+  getRecipeSinglePortal = (id: string): Observable<ViewRecipeModel> => {
+    return this.http.get<ViewRecipeModel>(`${this.baseApiUrl}/recipe/${id}`);
+  };
+
+  getPortalRecipes = (params: HttpParams): Observable<RecipeListModel> => {
+    return this.http.get<RecipeListModel>(
+      `${this.baseApiUrl}/all-recipes`,
+      {
+        params: params,
+      }
     );
   };
 

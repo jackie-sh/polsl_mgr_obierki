@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Route } from "@angular/router";
 import { AboutComponent } from './views/about/about.component';
 import { HomeComponent } from './views/home/home.component';
+import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
+import { UserSiteComponent } from './views/user/user-site/user-site.component';
 
 
 const routes: Route[] = [
@@ -19,6 +21,22 @@ const routes: Route[] = [
     data: {
       title: "O nas",
       breadcrumbs: "O nas",
+    },
+  },
+  {
+    path: "user/:id",
+    component: UserSiteComponent,
+    data: {
+      title: "Użytkownik",
+      breadcrumbs: "Użytkownik",
+    },
+  },
+  {
+    path: "my-profile",
+    component: MyProfileComponent,
+    data: {
+      title: "Mój profil",
+      breadcrumbs: "Mój profil",
     },
   },
   {
