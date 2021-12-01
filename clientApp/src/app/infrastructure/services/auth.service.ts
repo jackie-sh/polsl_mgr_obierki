@@ -1,13 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { ActivatedRouteSnapshot, Router } from "@angular/router";
-import { LoaderService } from "./loader.service";
-import { RegisterModel } from "../models/register.model";
-import { tap, share, finalize, take, map } from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { LoaderService } from './loader.service';
+import { RegisterModel } from '../models/register.model';
+import { tap, share, finalize, take, map } from 'rxjs/operators';
 
-const USER_ID_NAME: string = "USER_ID";
-const USERNAME_NAME: string = "USERNAME";
-const ACCESS_TOKEN_NAME: string = "ACCESS_TOKEN";
+const USER_ID_NAME: string = 'USER_ID';
+const USERNAME_EMAIL: string = 'EMAIL';
+const USERNAME_LOGIN: string = 'LOGIN';
+const ACCESS_TOKEN_NAME: string = 'ACCESS_TOKEN';
 
 import {
   Observable,
@@ -16,27 +17,24 @@ import {
   of,
   Subscriber,
   Subject,
-  empty,
   BehaviorSubject,
-} from "rxjs";
+} from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   loggedInSubject: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    @Inject("BASE_API_URL") private readonly baseApiUrl: string,
+    @Inject('BASE_API_URL') private readonly baseApiUrl: string,
     private readonly http: HttpClient,
     private router: Router,
     private loaderService: LoaderService
-  ) {
-
-  }
+  ) {}
 
   get loggedUserName() {
-    return localStorage.getItem(USERNAME_NAME);
+    return localStorage.getItem(USERNAME_LOGIN);
   }
 
   get loggedId() {
@@ -48,7 +46,7 @@ export class AuthService {
   }
 
   register = (model: RegisterModel): Observable<Response> => {
-    return this.http.post<Response>(`${this.baseApiUrl}`, model);
+    return this.http.post<Response>(`${this.baseApiUrl}/register`, model);
   };
 
   login = (model: { login: string; password: string }): Observable<any> => {
@@ -57,14 +55,15 @@ export class AuthService {
         this.setLocalStorage(await res);
         this.loggedInSubject.next(true);
       }),
-      finalize(() => {
-
-      })
+      finalize(() => {})
     );
   };
 
   private setLocalStorage = (response: any): void => {
-    // TODO
+    localStorage.setItem(ACCESS_TOKEN_NAME, response.token);
+    localStorage.setItem(USER_ID_NAME, response.user_id);
+    localStorage.setItem(USERNAME_EMAIL, response.email);
+    localStorage.setItem(USERNAME_LOGIN, response.username);
   };
 
   public logOut = async (): Promise<void> => {
@@ -76,8 +75,8 @@ export class AuthService {
           finalize(() => {
             this.loaderService.hide();
 
-            this.router.navigate(["/home"], {
-              queryParams: { logoutSuccess: "true" },
+            this.router.navigate(['/home'], {
+              queryParams: { logoutSuccess: 'true' },
             });
           })
         )
@@ -94,9 +93,9 @@ export class AuthService {
   };
 
   private clearLocalStorage = (): void => {
-    localStorage.removeItem(USERNAME_NAME);
+    localStorage.removeItem(USERNAME_EMAIL);
+    localStorage.removeItem(USERNAME_LOGIN);
     localStorage.removeItem(ACCESS_TOKEN_NAME);
     localStorage.removeItem(USER_ID_NAME);
   };
 }
-

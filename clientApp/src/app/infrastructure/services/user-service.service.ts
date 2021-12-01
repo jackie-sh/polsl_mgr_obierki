@@ -12,8 +12,5 @@ export class UserServiceService {
     private readonly http: HttpClient
   ) {}
 
-  userRegister = (model: UserRegisterModel) => {
-    const url = `${this.baseApiUrl}/register`;
-    return this.http.post<any>(url, model);
-  };
+ 
 }

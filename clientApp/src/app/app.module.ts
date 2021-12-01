@@ -17,6 +17,12 @@ import { NgbModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { RecipesListComponent } from './views/recipes/recipes-list/recipes-list.component';
 import { UserSiteComponent } from './views/user/user-site/user-site.component';
 import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
+import { AppHelper } from 'src/app/infrastructure/helpers/app-helper';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('ACCESS_TOKEN');
+}
 
 @NgModule({
   declarations: [
@@ -42,6 +48,13 @@ import { MyProfileComponent } from './views/user/my-profile/my-profile.component
     EditorModule,
     NgbModule,
     NgbRatingModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: [AppHelper.getBaseUrl()],
+        disallowedRoutes: [],
+      },
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
