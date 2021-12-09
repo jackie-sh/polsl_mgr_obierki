@@ -14,7 +14,7 @@ class User(models.Model):
         ordering = ['name', 'email']
 
 
-class Ratings(models.Model):
+class Rating(models.Model):
     comments = models.CharField(max_length=300)
     rating = models.IntegerField()
     pub_date = models.DateField()
@@ -40,11 +40,11 @@ class Message(models.Model):
         ordering = ['message', 'pub_date']
 
 
-class Recipes(models.Model):
+class Recipe(models.Model):
     description = models.CharField(max_length=300)
     recipe_type = models.CharField(max_length=30)
     views = models.IntegerField()
-    ratings = models.ManyToManyField(Ratings)
+    rating = models.ManyToManyField(Rating)
 
     def __str__(self):
         return "%s %s %s" % (self.description, self.views, self.recipe_type)
