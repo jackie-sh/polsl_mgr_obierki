@@ -1,5 +1,5 @@
 """
-ASGI config for przepisy_backend project.
+ASGI config for przepisy_backend2 project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

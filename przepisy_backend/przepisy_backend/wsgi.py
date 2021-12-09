@@ -1,5 +1,5 @@
 """
-WSGI config for przepisy_backend project.
+WSGI config for przepisy_backend2 project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
