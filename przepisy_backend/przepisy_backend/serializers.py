@@ -23,5 +23,5 @@ class MessageSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('id', 'description', 'recipe_type', 'views', 'rating')
+        fields = ('id', 'description', 'recipe_type', 'views', 'rating', 'file')
 

@@ -45,9 +45,10 @@ class Recipe(models.Model):
     recipe_type = models.CharField(max_length=30)
     views = models.IntegerField()
     rating = models.ManyToManyField(Rating)
+    file = models.FileField(blank=False, null=False)
 
     def __str__(self):
-        return "%s %s %s" % (self.description, self.views, self.recipe_type)
+        return "%s %s %s %s" % (self.description, self.views, self.recipe_type, self.file)
 
     class Meta:
         ordering = ['recipe_type', 'views']
