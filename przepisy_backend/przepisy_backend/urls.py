@@ -1,4 +1,4 @@
-"""przepisy_backend2 URL Configuration
+"""przepisy_backend URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -14,8 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.template.defaulttags import url
+from django.urls import path, include
+from przepisy_backend import views, settings
+from przepisy_backend.views import FileUploadView
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', FileUploadView.as_view()),
+    ##FIXME
+    # path('upload/', include('uploadapp.urls')),
+    # url(r'^', include('przepisy_backend.urls')),
+    # url(r'^api/tutorials$', views.tutorial_list),
+    # url(r'^api/tutorials/(?P<pk>[0-9]+)$', views.tutorial_detail),
+    # url(r'^api/tutorials/published$', views.tutorial_list_published)
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
