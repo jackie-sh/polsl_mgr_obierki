@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from przepisy_backend.models import User, Rating, Message, Recipe
+from recipesBackend.models import User, Rating, Message, Recipe
 
 
 class UserSerializer(serializers.ModelSerializer):

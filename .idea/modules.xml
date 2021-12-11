@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/przepisy_backend.iml" filepath="$PROJECT_DIR$/.idea/przepisy_backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/polsl_mgr_obierki.iml" filepath="$PROJECT_DIR$/.idea/polsl_mgr_obierki.iml" />
     </modules>
   </component>
 </project>

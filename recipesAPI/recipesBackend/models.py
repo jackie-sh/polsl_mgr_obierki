@@ -2,6 +2,7 @@ from django.db import models
 
 
 class User(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
     login = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
@@ -15,6 +16,7 @@ class User(models.Model):
 
 
 class Rating(models.Model):
+    id = models.AutoField(primary_key=True)
     comments = models.CharField(max_length=300)
     rating = models.IntegerField()
     pub_date = models.DateField()
@@ -28,19 +30,21 @@ class Rating(models.Model):
 
 
 class Message(models.Model):
+    id = models.AutoField(primary_key=True)
     message = models.CharField(max_length=300)
     pub_date = models.DateField()
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
+    senderID = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
+    receiverID = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
 
     def __str__(self):
-        return "%s %s %s" % (self.message, self.sender, self.receiver)
+        return "%s %s %s" % (self.message, self.senderID, self.receiverID)
 
     class Meta:
         ordering = ['message', 'pub_date']
 
 
 class Recipe(models.Model):
+    id = models.AutoField(primary_key=True)
     description = models.CharField(max_length=300)
     recipe_type = models.CharField(max_length=30)
     views = models.IntegerField()
