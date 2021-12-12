@@ -6,8 +6,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from recipesBackend import views
 from recipesBackend.views import CustomAuthToken, ProfileView
 
-# url(r'^api/register/$', views.userApi),
-
 
 urlpatterns = [
     url(r'^api/users/getAllUsers', views.getallUsersApi),
