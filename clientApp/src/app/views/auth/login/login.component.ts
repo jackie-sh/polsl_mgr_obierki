@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from 'src/app/infrastructure/services/auth.service';
-import {LoaderService} from 'src/app/infrastructure/services/loader.service';
-import { Router } from "@angular/router";
-import { Meta } from "@angular/platform-browser";
-import { finalize } from "rxjs/operators";
-import { FormControl, Validators, FormGroup } from "@angular/forms";
+import { AuthService } from 'src/app/infrastructure/services/auth.service';
+import { LoaderService } from 'src/app/infrastructure/services/loader.service';
+import { Router } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
+import { finalize } from 'rxjs/operators';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-
   private displayNames: any;
 
-  constructor( 
+  constructor(
     private authService: AuthService,
     private loaderService: LoaderService,
     private router: Router,
-    private metaService: Meta) { }
+    private metaService: Meta
+  ) {}
 
   private setMetaDescripition(text: string) {
     if (text)
@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
   }
 
   public readonly alertModel: any = {
-    class: "alert-success",
-    text: "",
+    class: 'alert-success',
+    text: '',
     show: false,
   };
 
@@ -36,19 +36,20 @@ export class LoginComponent implements OnInit {
     required: (...args) => `Pole jest wymagane`,
   };
 
-  private readonly redirectUrl: string = "/portal";
+  private readonly redirectUrl: string = '/portal';
 
   public readonly texts = {
-    metaDescription: "Zaloguj się do Przepisy Kulinarne, aby uzyskiwać informacje na temat nowych przepisów.",
-    password: "Hasło",
-    login: "Login",
-    submit: "Zaloguj",
-    header: "Logowanie",
-    loginFailureMessage: "Niepoprawny login lub hasło",
-    loginSuccessMessage: "Użytkownik zalogowany poprawnie",
-    invalidFormMessage: "Formularz zawiera błędy",
-    createAccountLabel: "Załóż konto",
-    forgotPassword: "Zapomniałem hasła",
+    metaDescription:
+      'Zaloguj się do Przepisy Kulinarne, aby uzyskiwać informacje na temat nowych przepisów.',
+    password: 'Hasło',
+    login: 'Login',
+    submit: 'Zaloguj',
+    header: 'Logowanie',
+    loginFailureMessage: 'Niepoprawny login lub hasło',
+    loginSuccessMessage: 'Użytkownik zalogowany poprawnie',
+    invalidFormMessage: 'Formularz zawiera błędy',
+    createAccountLabel: 'Załóż konto',
+    forgotPassword: 'Zapomniałem hasła',
   };
 
   ngOnInit() {
@@ -68,21 +69,23 @@ export class LoginComponent implements OnInit {
     this.loaderService.show();
     this.authService
       .login(formValueObject)
-      .pipe(finalize(() => {
-        this.loaderService.hide();
-      }
-      ))
+      .pipe(
+        finalize(() => {
+          this.loaderService.hide();
+        })
+      )
       .subscribe(
-        () => {
+        (response) => {
+          console.log(response);
           this.router.navigate([this.redirectUrl]);
         },
         (error) => {
           if (error && error.error && error.status === 401) {
-            this.showAlert(error.error, "alert-danger", 10000);
+            this.showAlert(error.error, 'alert-danger', 10000);
           } else {
             this.showAlert(
               this.texts.loginFailureMessage,
-              "alert-danger",
+              'alert-danger',
               10000
             );
           }
@@ -91,24 +94,24 @@ export class LoginComponent implements OnInit {
   };
 
   validationFailure = (): void => {
-    this.showAlert(this.texts.invalidFormMessage, "alert-danger", 5000);
+    this.showAlert(this.texts.invalidFormMessage, 'alert-danger', 5000);
   };
 
   initForm = (): void => {
     let controls = {};
 
-    controls["login"] = new FormControl("", Validators.required);
-    controls["password"] = new FormControl("", Validators.required);
+    controls['login'] = new FormControl('', Validators.required);
+    controls['password'] = new FormControl('', Validators.required);
     this.form = new FormGroup(controls);
   };
 
   redirectToRegister = (): void => {
-    this.router.navigate(["auth/register"]);
+    this.router.navigate(['auth/register']);
   };
 
   public form: FormGroup;
 
-  private readonly defaultErrorText: string = "Błąd w polu ";
+  private readonly defaultErrorText: string = 'Błąd w polu ';
   private isSubmited: boolean = false;
 
   onSubmit = (): void => {

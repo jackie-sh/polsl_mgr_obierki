@@ -50,10 +50,13 @@ export class UsersRegistrationComponent implements OnInit {
         /^(?=.*[A-Za-z0-9]$)[A-Za-z][A-Za-z\d.\-_]{0,19}$/
       ),
     ]);
+
     controls['email'] = new FormControl('', [
       Validators.required,
       Validators.email,
     ]);
+
+    controls['name'] = new FormControl('', [Validators.required]);
 
     controls['password'] = new FormControl('', [
       Validators.required,
@@ -100,7 +103,7 @@ export class UsersRegistrationComponent implements OnInit {
     name: 'Nazwa',
     header: 'Rejestracja użytkownika',
     registrationError: 'Nie udało się utworzyć konta',
-    registrationSuccess: 'Konto założone',
+    registrationSuccess: 'Konto założone. Możesz się zalogować.',
     formErrorMessage: 'Formularz zawiera błędy',
     fieldRequiredLabel: 'Pole wymagane',
   };
@@ -153,7 +156,13 @@ export class UsersRegistrationComponent implements OnInit {
       .register(formDTO)
       .pipe(finalize(() => (this.loader = false)))
       .subscribe(
-        (result) => this.onSubmitSuccess(result),
+        (result) => {
+          if (result.isCreated == true) {
+            this.onSubmitSuccess(result);
+          } else {
+            this.onSubmitFailure(result.errorMessage);
+          }
+        },
         (error) => this.onSubmitFailure(error)
       );
   };

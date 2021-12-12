@@ -105,6 +105,28 @@
 
                   <div class="form-outline mb-3">
                     <input
+                      id="name"
+                      [placeholder]="texts.name"
+                      type="text"
+                      [class.error-portal]="hasError('name')"
+                      class="form-control form-control-portal"
+                      formControlName="name"
+                      aria-required="true"
+                      autocomplete="name"
+                    />
+                    <label for="name">
+                      {{ texts.name }}
+                    </label>
+                    &nbsp;
+                    <span
+                      class="red-text"
+                      *ngFor="let error of collectErrors('email')"
+                      >{{ error.errorMessage }}</span
+                    >
+                  </div>
+
+                  <div class="form-outline mb-3">
+                    <input
                       id="password"
                       [placeholder]="texts.password"
                       type="password"

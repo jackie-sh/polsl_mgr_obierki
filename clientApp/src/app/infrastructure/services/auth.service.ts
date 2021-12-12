@@ -45,13 +45,14 @@ export class AuthService {
     return !!localStorage.getItem(ACCESS_TOKEN_NAME);
   }
 
-  register = (model: RegisterModel): Observable<Response> => {
-    return this.http.post<Response>(`${this.baseApiUrl}/register`, model);
+  register = (model: RegisterModel): Observable<any> => {
+    return this.http.post<any>(`${this.baseApiUrl}/users/addUser/`, model);
   };
 
-  login = (model: { login: string; password: string }): Observable<any> => {
-    return this.http.post<any>(`${this.baseApiUrl}/login`, model).pipe(
+  login = (model: { login: string; username: string }): Observable<any> => {
+    return this.http.post<any>(`${this.baseApiUrl}/register`, model).pipe(
       tap(async (res) => {
+        console.log(res);
         this.setLocalStorage(await res);
         this.loggedInSubject.next(true);
       }),
