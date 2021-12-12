@@ -14,11 +14,7 @@ urlpatterns = [
     url(r'^api/users/modifyUser/([0-9]+)$', views.modifyUserApi),
     url(r'^api/users/deleteUser/([0-9]+)$', views.deleteUserApi),
     path('profile/', ProfileView.as_view()),
-<<<<<<< HEAD
     path('api/register', CustomAuthToken.as_view()),
-=======
-    path('api/register/', CustomAuthToken.as_view()),
->>>>>>> 5c18b70 (Adjust url names)
     url(r'^api/recipes/upload-main-image', views.SaveFile)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
