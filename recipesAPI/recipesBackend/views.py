@@ -19,7 +19,7 @@ def username_exists(username):
 
 
 @csrf_exempt
-def allUsersApi(request, id=0):
+def allUsersApi(request):
     if request.method == 'GET':
         users = User.objects.values_list('id', 'name')
         user_serializer = UserSerializer(users, many=True)

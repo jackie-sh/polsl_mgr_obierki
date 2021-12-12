@@ -10,7 +10,7 @@ from recipesBackend.views import CustomAuthToken, ProfileView
 urlpatterns = [
     url(r'^api/register/$', views.userApi),
     url(r'^api/users/getUser/([0-9]+)$', views.userApi),
-    url(r'^api/users/getAllUsers', views.userApi),
+    url(r'^api/users/getAllUsers', views.allUsersApi),
     path('profile/', ProfileView.as_view()),
     path('api/auth/', CustomAuthToken.as_view()),
     url(r'^api/SaveFile$', views.SaveFile)
