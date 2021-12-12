@@ -61,7 +61,9 @@ def addUserApi(request, id=0):
 def modifyUserApi(request, id=0):
     if request.method == 'PUT':
         user_data = JSONParser().parse(request)
-        user = User.objects.get(id=user_data.id)
+        if not username_exists_by_id(id):
+            return JsonResponse({'isUpdated': False, 'errorMessage': "User with given id does not exist!"}, safe=False)
+        user = User.objects.get(id=id)
         user_serializer = UserSerializer(user, data=user_data)
         if user_serializer.is_valid():
             user_serializer.save()
