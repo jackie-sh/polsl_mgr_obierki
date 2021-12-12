@@ -14,8 +14,8 @@ urlpatterns = [
     url(r'^api/users/modifyUser/([0-9]+)$', views.modifyUserApi),
     url(r'^api/users/deleteUser/([0-9]+)$', views.deleteUserApi),
     path('profile/', ProfileView.as_view()),
-    path('api/auth/', CustomAuthToken.as_view()),
-    url(r'^api/SaveFile$', views.SaveFile)
+    path('api/register/', CustomAuthToken.as_view()),
+    url(r'^api/recipes/upload-main-image', views.SaveFile)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)
