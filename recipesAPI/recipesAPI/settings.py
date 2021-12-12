@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'recipesBackend.apps.RecipesBackendConfig',
+    'public.apps.PublicConfig',
     'rest_framework',
     'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -56,6 +58,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+#CORS_ALLOWED_ORIGINS = [
+#    "http://localhost:4200",
+#    "http://127.0.0.1:4200"
+#]
 
 ROOT_URLCONF = 'recipesAPI.urls'
 
@@ -126,6 +133,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+#LOGIN_REDIRECT_URL = '/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
