@@ -1,11 +1,7 @@
 from rest_framework import serializers
-from recipesBackend.models import User, Rating, Message, Recipe
+from recipesBackend.models import Rating, Message, Recipe
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'name', 'login', 'password', 'email')
 
 
 class RatingSerializer(serializers.ModelSerializer):

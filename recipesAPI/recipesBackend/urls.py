@@ -8,11 +8,6 @@ from recipesBackend.views import CustomAuthToken, ProfileView
 
 
 urlpatterns = [
-    url(r'^api/users/getAllUsers', views.getallUsersApi),
-    url(r'^api/users/getUser/([0-9]+)$', views.getUserApi),
-    url(r'^api/users/addUser/', views.addUserApi),
-    url(r'^api/users/modifyUser/([0-9]+)$', views.modifyUserApi),
-    url(r'^api/users/deleteUser/([0-9]+)$', views.deleteUserApi),
     path('profile/', ProfileView.as_view()),
     path('api/register', CustomAuthToken.as_view()),
     url(r'^api/recipes/upload-main-image', views.SaveFile)

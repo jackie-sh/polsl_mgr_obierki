@@ -22,5 +22,6 @@ urlpatterns = [
     path('accounts/', include('recipesBackend.urls')),
     path('admin/', admin.site.urls),
     path('api/auth/', include('rest_framework.urls')),
-    url(r'^', include('recipesBackend.urls'))
+    url(r'^', include('recipesBackend.urls')),
+    url(r'^', include('users.urls'))
 ]

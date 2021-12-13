@@ -1,18 +1,5 @@
 from django.db import models
-
-
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
-    login = models.CharField(max_length=30)
-    password = models.CharField(max_length=30)
-    email = models.EmailField()
-
-    def __str__(self):
-        return "%s" % self.name
-
-    class Meta:
-        ordering = ['name', 'email']
+from users.models import User
 
 
 class Rating(models.Model):

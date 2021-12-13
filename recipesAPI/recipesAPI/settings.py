@@ -39,11 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'recipesBackend.apps.RecipesBackendConfig',
     'public.apps.PublicConfig',
     'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
+    'recipesBackend.apps.RecipesBackendConfig',
+    'users.apps.UsersConfig',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
