@@ -1,7 +1,6 @@
 from django.db import models
 from users.models import User
 
-
 class Rating(models.Model):
     id = models.AutoField(primary_key=True)
     comments = models.CharField(max_length=300)
