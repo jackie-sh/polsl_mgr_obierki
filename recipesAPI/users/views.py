@@ -24,9 +24,11 @@ class RegisterView(GenericAPIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+            data = {'isCreated': True}
+            return JsonResponse(data, status=status.HTTP_201_CREATED)
 
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = {'isCreated': True, 'errorMessage': serializer.errors}
+        return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(GenericAPIView):
@@ -44,12 +46,12 @@ class LoginView(GenericAPIView):
 
             serializer = UserSerializer(user)
 
-            data = {'user': serializer.data, 'token': auth_token}
+            data = {'token': auth_token}
 
             return JsonResponse(data, status=status.HTTP_200_OK)
 
             # SEND RES
-        return JsonResponse({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse({'errorMessage': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @csrf_exempt
 def getallUsersApi(request):
