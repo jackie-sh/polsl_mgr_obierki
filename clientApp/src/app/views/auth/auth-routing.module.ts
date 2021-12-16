@@ -1,36 +1,36 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RegisterGuard } from '../../infrastructure/guards/register.guard';
-import {RegisterComponent} from '../auth/register/register.component';
-import {LoginComponent} from '../auth/login/login.component';
+import { RegisterComponent } from '../auth/register/register.component';
+import { LoginComponent } from '../auth/login/login.component';
 
 const routes: Routes = [
   {
-    path: "register",
+    path: 'register',
     component: RegisterComponent,
     data: {
-      title: "Rejestracja",
-      breadcrumbs: "Rejestracja",
+      title: 'Rejestracja',
+      breadcrumbs: 'Rejestracja',
     },
     canActivate: [RegisterGuard],
   },
   {
-    path: "login",
+    path: 'login',
     component: LoginComponent,
     data: {
-      title: "Logowanie",
-      breadcrumbs: "Logowanie",
+      title: 'Logowanie',
+      breadcrumbs: 'Logowanie',
     },
     canActivate: [RegisterGuard],
   },
   {
-    path: "",
-    redirectTo: "login",
+    path: '',
+    redirectTo: 'login',
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {}

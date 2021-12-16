@@ -36,13 +36,13 @@ export class LoginComponent implements OnInit {
     required: (...args) => `Pole jest wymagane`,
   };
 
-  private readonly redirectUrl: string = '/portal';
+  private readonly redirectUrl: string = '/home';
 
   public readonly texts = {
     metaDescription:
       'Zaloguj się do Przepisy Kulinarne, aby uzyskiwać informacje na temat nowych przepisów.',
     password: 'Hasło',
-    login: 'Login',
+    username: 'Login',
     submit: 'Zaloguj',
     header: 'Logowanie',
     loginFailureMessage: 'Niepoprawny login lub hasło',
@@ -80,15 +80,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.redirectUrl]);
         },
         (error) => {
-          if (error && error.error && error.status === 401) {
-            this.showAlert(error.error, 'alert-danger', 10000);
-          } else {
-            this.showAlert(
-              this.texts.loginFailureMessage,
-              'alert-danger',
-              10000
-            );
-          }
+          this.showAlert(this.texts.loginFailureMessage, 'alert-danger', 10000);
         }
       );
   };
@@ -100,7 +92,7 @@ export class LoginComponent implements OnInit {
   initForm = (): void => {
     let controls = {};
 
-    controls['login'] = new FormControl('', Validators.required);
+    controls['username'] = new FormControl('', Validators.required);
     controls['password'] = new FormControl('', Validators.required);
     this.form = new FormGroup(controls);
   };

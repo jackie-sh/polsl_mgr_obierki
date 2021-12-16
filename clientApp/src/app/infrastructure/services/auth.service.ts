@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { LoaderService } from './loader.service';
 import { RegisterModel } from '../models/register.model';
 import { tap, share, finalize, take, map } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 const USER_ID_NAME: string = 'USER_ID';
 const USERNAME_EMAIL: string = 'EMAIL';
@@ -46,11 +47,12 @@ export class AuthService {
   }
 
   register = (model: RegisterModel): Observable<any> => {
-    return this.http.post<any>(`${this.baseApiUrl}/users/addUser/`, model);
+    return this.http.post<any>(`${this.baseApiUrl}/register`, model);
   };
 
-  login = (model: { login: string; username: string }): Observable<any> => {
-    return this.http.post<any>(`${this.baseApiUrl}/register`, model).pipe(
+  login = (model: { username: string; password: string }): Observable<any> => {
+    console.log(model);
+    return this.http.post<any>(`${this.baseApiUrl}/login`, model).pipe(
       tap(async (res) => {
         console.log(res);
         this.setLocalStorage(await res);
@@ -61,10 +63,16 @@ export class AuthService {
   };
 
   private setLocalStorage = (response: any): void => {
+    const helper = new JwtHelperService();
+
+    const decodedToken = helper.decodeToken(response.token);
+
+    console.log(decodedToken);
+
     localStorage.setItem(ACCESS_TOKEN_NAME, response.token);
-    localStorage.setItem(USER_ID_NAME, response.user_id);
-    localStorage.setItem(USERNAME_EMAIL, response.email);
-    localStorage.setItem(USERNAME_LOGIN, response.username);
+    //localStorage.setItem(USER_ID_NAME, response.user_id);
+    //localStorage.setItem(USERNAME_EMAIL, response.email);
+    localStorage.setItem(USERNAME_LOGIN, decodedToken.username);
   };
 
   public logOut = async (): Promise<void> => {
@@ -74,6 +82,7 @@ export class AuthService {
         .post<void>(`${this.baseApiUrl}/auth/logout`, {})
         .pipe(
           finalize(() => {
+            this.clearLocalStorage();
             this.loaderService.hide();
 
             this.router.navigate(['/home'], {
@@ -83,7 +92,6 @@ export class AuthService {
         )
         .subscribe(
           (result) => {
-            this.clearLocalStorage();
             this.loggedInSubject.next(false);
           },
           (error) => {}
@@ -94,9 +102,9 @@ export class AuthService {
   };
 
   private clearLocalStorage = (): void => {
-    localStorage.removeItem(USERNAME_EMAIL);
+    //localStorage.removeItem(USERNAME_EMAIL);
     localStorage.removeItem(USERNAME_LOGIN);
     localStorage.removeItem(ACCESS_TOKEN_NAME);
-    localStorage.removeItem(USER_ID_NAME);
+    //localStorage.removeItem(USER_ID_NAME);
   };
 }

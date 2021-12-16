@@ -1,7 +1,6 @@
 export class RegisterModel {
-  login: string;
+  username: string;
   email: string;
-  name: string;
   password: string;
 
   constructor() {}

@@ -1,46 +1,46 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {CreateRecipeComponent} from './create-recipe/create-recipe.component';
+import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
 import { RecipeComponent } from './recipe/recipe.component';
 
 const routes: Routes = [
   {
-    path: "create-recipe",
+    path: 'create-recipe',
     component: CreateRecipeComponent,
     data: {
-      title: "Dodaj przepis",
+      title: 'Dodaj przepis',
     },
   },
   {
-    path: "list-recipe",
+    path: 'list-recipe',
     component: CreateRecipeComponent,
     data: {
-      title: "Lista przepisów",
+      title: 'Lista przepisów',
     },
   },
   {
-    path: "create-recipe/:id",
+    path: 'create-recipe/:id',
     component: CreateRecipeComponent,
     data: {
-      title: "Edytuj przepis",
+      title: 'Edytuj przepis',
     },
   },
   {
-    path: "/:id",
+    path: '/:id',
     component: RecipeComponent,
     data: {
-      title: "Przepis kulinarny",
+      title: 'Przepis kulinarny',
     },
   },
   {
-    path: "",
-    redirectTo: "create-recipe",
-    pathMatch: "full",
+    path: '',
+    redirectTo: 'create-recipe',
+    pathMatch: 'full',
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class RecipeRoutingModule { }
+export class RecipeRoutingModule {}

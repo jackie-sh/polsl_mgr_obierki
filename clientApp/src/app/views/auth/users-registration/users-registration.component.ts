@@ -56,8 +56,6 @@ export class UsersRegistrationComponent implements OnInit {
       Validators.email,
     ]);
 
-    controls['name'] = new FormControl('', [Validators.required]);
-
     controls['password'] = new FormControl('', [
       Validators.required,
       CustomPatternValidator(Generate(this._passwordRequirements)),
@@ -145,10 +143,9 @@ export class UsersRegistrationComponent implements OnInit {
 
   protected validationSuccess = (formValueObject): void => {
     const formDTO: UserRegisterModel = {
-      login: formValueObject.login,
       password: formValueObject.password,
       email: formValueObject.email,
-      name: formValueObject.name,
+      username: formValueObject.login,
     };
 
     this.loader = true;
