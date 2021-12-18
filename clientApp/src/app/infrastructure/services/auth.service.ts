@@ -54,7 +54,6 @@ export class AuthService {
     console.log(model);
     return this.http.post<any>(`${this.baseApiUrl}/login`, model).pipe(
       tap(async (res) => {
-        console.log(res);
         this.setLocalStorage(await res);
         this.loggedInSubject.next(true);
       }),
@@ -67,10 +66,8 @@ export class AuthService {
 
     const decodedToken = helper.decodeToken(response.token);
 
-    console.log(decodedToken);
-
     localStorage.setItem(ACCESS_TOKEN_NAME, response.token);
-    //localStorage.setItem(USER_ID_NAME, response.user_id);
+    localStorage.setItem(USER_ID_NAME, response.id);
     //localStorage.setItem(USERNAME_EMAIL, response.email);
     localStorage.setItem(USERNAME_LOGIN, decodedToken.username);
   };
@@ -105,6 +102,6 @@ export class AuthService {
     //localStorage.removeItem(USERNAME_EMAIL);
     localStorage.removeItem(USERNAME_LOGIN);
     localStorage.removeItem(ACCESS_TOKEN_NAME);
-    //localStorage.removeItem(USER_ID_NAME);
+    localStorage.removeItem(USER_ID_NAME);
   };
 }
