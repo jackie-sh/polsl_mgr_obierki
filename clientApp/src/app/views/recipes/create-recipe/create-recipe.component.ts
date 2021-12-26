@@ -111,7 +111,7 @@ export class CreateRecipeComponent implements OnInit {
     this.setRecipeMainImg(this.recipe.mainImageId);
   };
 
-  private setRecipeMainImg = (id: string): void => {
+  private setRecipeMainImg = (id: number): void => {
     this.loaderService.show();
     this.filesService
       .getFileById(id)
@@ -293,7 +293,7 @@ export class CreateRecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          this.recipe.mainImageId = result.id;
+          this.recipe.mainImageId = +result.id;
           this.setMainImgSrc(file);
         },
         (error) => {
