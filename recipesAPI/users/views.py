@@ -1,6 +1,6 @@
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import render
 import json
@@ -56,7 +56,7 @@ class LoginView(GenericAPIView):
 @csrf_exempt
 def getallUsersApi(request):
     if request.method == 'GET':
-        users = User.objects.values_list('id', 'name')
+        users = User.objects.values_list('id', 'username')
         user_serializer_raw = json.dumps(list(users), cls=DjangoJSONEncoder)
         return JsonResponse(user_serializer_raw, safe=False)
 
@@ -77,12 +77,15 @@ def addUserApi(request, id=0):
     if request.method == 'POST':
         users_data = JSONParser().parse(request)
         user_serializer = UserSerializer(data=users_data)
-        if user_serializer.is_valid():
-            if not username_exists_by_name(user_serializer.validated_data['name']):
-                user_serializer.save()
-                return JsonResponse({'isCreated': True, 'errorMessage': ""}, safe=False)
-            return JsonResponse({'isCreated': False, 'errorMessage': "User already exists!"}, safe=False)
-        return JsonResponse({'isCreated': False, 'errorMessage': "Incorrect json format!"}, safe=False)
+        try:
+            if user_serializer.is_valid(raise_exception=True):
+                if not username_exists_by_name(user_serializer.validated_data['username']):
+                    user_serializer.save()
+                    return JsonResponse({'isCreated': True, 'errorMessage': ""}, safe=False)
+                return JsonResponse({'isCreated': False, 'errorMessage': "User already exists!"}, safe=False)
+            return JsonResponse({'isCreated': False, 'errorMessage': "Incorrect json format!"}, safe=False)
+        except serializers.ValidationError as valEr:
+            return JsonResponse({'isCreated': False, 'errorMessage': valEr.detail}, safe=False)
     return JsonResponse({'isCreated': False, 'errorMessage': "This endpoint only serves posts!"}, safe=False)
 
 
@@ -114,7 +117,7 @@ def deleteUserApi(request, id=0):
 
 
 def username_exists_by_name(name):
-    return User.objects.filter(name=name).exists()
+    return User.objects.filter(username=name).exists()
 
 
 def username_exists_by_id(id):
