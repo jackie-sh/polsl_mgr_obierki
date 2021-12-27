@@ -13,6 +13,17 @@
     </footer>
   </div>
 </div>
+<ng-container *ngIf="authService.isLoggedIn">
+  <ng-chat
+    [adapter]="adapter"
+    [pollFriendsList]="true"
+    [title]="chatTitle"
+    [isCollapsed]="true"
+    [searchEnabled]="false"
+    [messagePlaceholder]="messagePlaceholder"
+    [userId]="authService.loggedId"
+  ></ng-chat>
+</ng-container>
 <app-loader></app-loader>
 
 <div hidden>

@@ -19,6 +19,7 @@ import { UserSiteComponent } from './views/user/user-site/user-site.component';
 import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
 import { AppHelper } from 'src/app/infrastructure/helpers/app-helper';
 import { JwtModule } from '@auth0/angular-jwt';
+import { NgChatModule } from 'ng-chat';
 
 export function tokenGetter() {
   return localStorage.getItem('ACCESS_TOKEN');
@@ -48,6 +49,7 @@ export function tokenGetter() {
     EditorModule,
     NgbModule,
     NgbRatingModule,
+    NgChatModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
