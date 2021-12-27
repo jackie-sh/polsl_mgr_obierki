@@ -1,9 +1,10 @@
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework import status, serializers
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import render
 import json
+import django.core
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
@@ -56,9 +57,11 @@ class LoginView(GenericAPIView):
 @csrf_exempt
 def getallUsersApi(request):
     if request.method == 'GET':
-        users = User.objects.values_list('id', 'username')
+        #qs = User.objects.all()
+        #data = django.core.serializers.serialize('json', qs, fields='username')
+        users = User.objects.values('id', 'username')
         user_serializer_raw = json.dumps(list(users), cls=DjangoJSONEncoder)
-        return JsonResponse(user_serializer_raw, safe=False)
+        return HttpResponse(user_serializer_raw, content_type="application/json")
 
 
 @csrf_exempt
