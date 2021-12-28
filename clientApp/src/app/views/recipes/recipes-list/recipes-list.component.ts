@@ -124,6 +124,10 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
     });
   };
 
+  submitFilterFormDesktop = (): void => {
+    this.fetchRecipes();
+  };
+
   private setMainImgSrc = (
     recipe: RecipeListItemModel,
     file: File | Blob

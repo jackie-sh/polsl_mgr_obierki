@@ -14,6 +14,17 @@
   </div>
 </div>
 <app-loader></app-loader>
+<ng-container *ngIf="authService.isLoggedIn">
+  <ng-chat
+    [adapter]="adapter"
+    [pollFriendsList]="true"
+    [title]="chatTitle"
+    [isCollapsed]="true"
+    [searchEnabled]="false"
+    [messagePlaceholder]="messagePlaceholder"
+    [userId]="authService.loggedId"
+  ></ng-chat>
+</ng-container>
 
 <div hidden>
   <!-- pre-load big images -->

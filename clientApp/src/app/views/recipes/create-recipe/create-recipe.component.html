@@ -37,6 +37,47 @@
                 </div>
 
                 <div class="form-outline mb-4">
+                  <div class="textarea-wrapper">
+                    <textarea
+                      pInputTextArea
+                      maxlength="512"
+                      type="text"
+                      class="form-control"
+                      id="shortDescription"
+                      placeholder="Krótki opis"
+                      formControlName="shortDescription"
+                    ></textarea>
+                    <label for="shortDescription">
+                      Krótki opis
+                      <span class="required"></span>
+                    </label>
+                    <div *ngIf="isShortDescriptionInvalid">
+                      <span class="red-text">Pole jest wymagane.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-outline mb-4">
+                  <div class="textarea-wrapper">
+                    <select
+                      id="categoryId"
+                      class="form-select"
+                      formControlName="categoryId"
+                    >
+                      <ng-container *ngFor="let category of categories">
+                        <option [value]="category.id">
+                          {{ category.name }}
+                        </option>
+                      </ng-container>
+                    </select>
+                    <label for="categoryId">
+                      Kategoria
+                      <span class="required"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-outline mb-4">
                   <div
                     class="dropzone"
                     tabindex="0"

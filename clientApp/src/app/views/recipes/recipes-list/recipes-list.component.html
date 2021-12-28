@@ -6,6 +6,10 @@
           <h2>{{ recipeLabel }}</h2>
         </div>
       </div>
+      <app-recipes-filter
+        #recipesFilterDesktop
+        (onFilterFormSubmit)="submitFilterFormDesktop()"
+      ></app-recipes-filter>
       <div class="row mt-4 no-gutters">
         <div class="col-md-12">
           <div class="mt-2">
