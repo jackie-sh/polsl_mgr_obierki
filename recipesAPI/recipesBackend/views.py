@@ -14,14 +14,11 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-
 @csrf_exempt
 def SaveFile(request):
     file = request.FILES['uploadedFile']
     file_name = default_storage.save(file.name, file)
     return JsonResponse(file_name, safe=False)
-
-
 
 class FileUploadView(APIView):
     parser_class = (FileUploadParser,)
