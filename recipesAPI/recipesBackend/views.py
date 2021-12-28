@@ -5,7 +5,7 @@ from rest_framework import status
 from django.core.serializers.json import DjangoJSONEncoder
 from rest_framework.parsers import JSONParser, FileUploadParser
 from django.views.decorators.csrf import csrf_exempt
-from recipesBackend.serializers import  RecipeSerializer
+from recipes.serializers import  RecipeSerializer
 from django.core.files.storage import default_storage
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated

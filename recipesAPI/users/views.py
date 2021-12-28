@@ -57,11 +57,11 @@ class LoginView(GenericAPIView):
 @csrf_exempt
 def getallUsersApi(request):
     if request.method == 'GET':
-        #qs = User.objects.all()
-        #data = django.core.serializers.serialize('json', qs, fields='username')
+        qs = User.objects.all()
+        data = django.core.serializers.serialize('json', qs)
         users = User.objects.values('id', 'username')
         user_serializer_raw = json.dumps(list(users), cls=DjangoJSONEncoder)
-        return HttpResponse(user_serializer_raw, content_type="application/json")
+        return HttpResponse(data, content_type="application/json")
 
 
 @csrf_exempt

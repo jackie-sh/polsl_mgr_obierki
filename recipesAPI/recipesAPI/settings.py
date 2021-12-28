@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'recipesBackend.apps.RecipesBackendConfig',
     'users.apps.UsersConfig',
+    'recipes.apps.RecipesConfig'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
