@@ -11,6 +11,7 @@ import { finalize } from 'rxjs/internal/operators/finalize';
 import { ConfirmationService } from 'src/app/infrastructure/services/confirmation.service';
 import { Location } from '@angular/common';
 import { DomHelper } from 'src/app/infrastructure/helpers/dom-helper';
+import { CategoryModel } from 'src/app/infrastructure/models/category.model';
 
 @Component({
   selector: 'app-create-recipe',
@@ -43,6 +44,14 @@ export class CreateRecipeComponent implements OnInit {
   private recipeId: string;
 
   private recipeSubscription: Subscription;
+
+  public categories: CategoryModel[] = [
+    { id: 1, name: 'Śniadanie' },
+    { id: 2, name: 'Obiad' },
+    { id: 3, name: 'Deser' },
+    { id: 4, name: 'Podwieczorek' },
+    { id: 5, name: 'Kolacja' },
+  ];
 
   constructor(
     private location: Location,
@@ -133,6 +142,18 @@ export class CreateRecipeComponent implements OnInit {
 
     controls['title'] = new FormControl(
       this.recipe && this.recipe.title ? this.recipe.title : '',
+      Validators.required
+    );
+
+    controls['categoryId'] = new FormControl(
+      this.recipe && this.recipe.categoryId ? this.recipe.categoryId : '1',
+      Validators.required
+    );
+
+    controls['shortDescription'] = new FormControl(
+      this.recipe && this.recipe.shortDescription
+        ? this.recipe.shortDescription
+        : '',
       Validators.required
     );
 
@@ -314,15 +335,26 @@ export class CreateRecipeComponent implements OnInit {
   get titleControl() {
     return this.recipeForm.get('title');
   }
-  /**
-   * Is title control invalid getter.
-   */
+
   get isTitleInvalid() {
     return (
       this.titleControl.invalid &&
       this.titleControl.touched &&
       this.titleControl.errors &&
       this.titleControl.errors.required
+    );
+  }
+
+  get shortDescriptionControl() {
+    return this.recipeForm.get('shortDescription');
+  }
+
+  get isShortDescriptionInvalid() {
+    return (
+      this.shortDescriptionControl.invalid &&
+      this.shortDescriptionControl.touched &&
+      this.shortDescriptionControl.errors &&
+      this.shortDescriptionControl.errors.required
     );
   }
 

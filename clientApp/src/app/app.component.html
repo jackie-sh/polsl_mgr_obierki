@@ -13,6 +13,7 @@
     </footer>
   </div>
 </div>
+<app-loader></app-loader>
 <ng-container *ngIf="authService.isLoggedIn">
   <ng-chat
     [adapter]="adapter"
@@ -24,7 +25,6 @@
     [userId]="authService.loggedId"
   ></ng-chat>
 </ng-container>
-<app-loader></app-loader>
 
 <div hidden>
   <!-- pre-load big images -->

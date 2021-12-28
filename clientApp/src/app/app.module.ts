@@ -15,8 +15,8 @@ import { ConfirmationComponent } from './shared/confirmation/confirmation.compon
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgbModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { RecipesListComponent } from './views/recipes/recipes-list/recipes-list.component';
-import { UserSiteComponent } from './views/user/user-site/user-site.component';
 import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
+import { RecipesFilterComponent } from './views/recipes/recipes-filter/recipes-filter.component';
 import { AppHelper } from 'src/app/infrastructure/helpers/app-helper';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgChatModule } from 'ng-chat';
@@ -36,8 +36,8 @@ export function tokenGetter() {
     CreateRecipeComponent,
     RecipesListComponent,
     ConfirmationComponent,
-    UserSiteComponent,
     MyProfileComponent,
+    RecipesFilterComponent,
   ],
   imports: [
     BrowserModule,
