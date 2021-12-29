@@ -1,5 +1,6 @@
 export class CreateRecipeModel {
   id: string | number;
+  authorId: string;
   title: string;
   content: string;
   categoryId: number;

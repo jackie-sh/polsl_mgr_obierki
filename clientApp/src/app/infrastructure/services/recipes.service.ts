@@ -8,6 +8,10 @@ import { RecipeFileUploadModel } from 'src/app/infrastructure/models/RecipeFileU
 import { ViewRecipeModel } from '../models/view-recipe.model';
 import { RecipeListItemModel } from '../models/recipe-list-item.model';
 import { RecipeListModel } from '../models/recipe-list.model';
+import { CreateCommentModel } from 'src/app/infrastructure/models/create-comment.model';
+import { RecipeMainPageItemModel } from 'src/app/infrastructure/models/recipe-main-page-item.model';
+import { EditRecipeModel } from 'src/app/infrastructure/models/edit-recipe.model';
+import { GetRecipeModel } from 'src/app/infrastructure/models/get-recipe.model';
 
 declare var tinyMCE: any;
 
@@ -30,16 +34,34 @@ export class RecipesService {
   };
 
   postRecipe = (model: CreateRecipeModel): Observable<Response> => {
-    return this.http.post<Response>(`${this.baseApiUrl}/recipe-add`, model);
+    return this.http.post<Response>(
+      `${this.baseApiUrl}/recipes/create-recipe`,
+      model
+    );
   };
 
-  putRecipe = (model: CreateRecipeModel): Observable<Response> => {
-    return this.http.put<Response>(`${this.baseApiUrl}/recipe-edit`, model);
+  putRecipe = (model: EditRecipeModel): Observable<Response> => {
+    return this.http.put<Response>(
+      `${this.baseApiUrl}/recipes/edit-recipe`,
+      model
+    );
+  };
+
+  getRecipeDetails = (id: string): Observable<GetRecipeModel> => {
+    return this.http.get<GetRecipeModel>(
+      `${this.baseApiUrl}/recipes/get-recipe/${id}`
+    );
+  };
+
+  deleteRecipe = (id: string): Observable<Response> => {
+    return this.http.get<Response>(
+      `${this.baseApiUrl}/recipes/delete-recipe/${id}`
+    );
   };
 
   postRecipeImage = (data: FormData): Observable<RecipeFileUploadModel> => {
     return this.http.post<RecipeFileUploadModel>(
-      `${this.baseApiUrl}/recipe/recipe-image`,
+      `${this.baseApiUrl}/recipes/upload-main-image`,
       data
     );
   };
@@ -49,11 +71,28 @@ export class RecipesService {
   };
 
   getPortalRecipes = (params: HttpParams): Observable<RecipeListModel> => {
-    return this.http.get<RecipeListModel>(
-      `${this.baseApiUrl}/all-recipes`,
+    return this.http.get<RecipeListModel>(`${this.baseApiUrl}/all-recipes`, {
+      params: params,
+    });
+  };
+
+  getAllRecipes = (
+    params: HttpParams
+  ): Observable<RecipeMainPageItemModel[]> => {
+    return this.http.get<RecipeMainPageItemModel[]>(
+      `${this.baseApiUrl}/recipes/get-all`,
       {
         params: params,
       }
+    );
+  };
+
+  createCommentForRecipe = (
+    model: CreateCommentModel
+  ): Observable<Response> => {
+    return this.http.post<Response>(
+      `${this.baseApiUrl}/recipes/create-comment`,
+      model
     );
   };
 

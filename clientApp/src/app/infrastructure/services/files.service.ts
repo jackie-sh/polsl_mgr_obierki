@@ -17,4 +17,12 @@ export class FilesService {
       observe: 'response',
     });
   };
+
+  // ??????????????????? TODO co będzie z backendu zwracane ?
+  getMainImageForRecipe = (id: number): Observable<HttpResponse<Blob>> => {
+    return this.http.get(`${this.baseApiUrl}/recipes/get-image/${id}`, {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  };
 }

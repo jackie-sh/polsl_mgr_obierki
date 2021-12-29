@@ -11,4 +11,8 @@ export class GetRecipeModel {
   shortDescription: string;
   views: number;
   comments: CommentModel[];
+
+  constructor() {
+    this.comments = [];
+  }
 }

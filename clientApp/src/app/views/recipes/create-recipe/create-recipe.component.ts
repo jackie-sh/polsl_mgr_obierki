@@ -12,6 +12,7 @@ import { ConfirmationService } from 'src/app/infrastructure/services/confirmatio
 import { Location } from '@angular/common';
 import { DomHelper } from 'src/app/infrastructure/helpers/dom-helper';
 import { CategoryModel } from 'src/app/infrastructure/models/category.model';
+import { EditRecipeModel } from 'src/app/infrastructure/models/edit-recipe.model';
 
 @Component({
   selector: 'app-create-recipe',
@@ -88,9 +89,9 @@ export class CreateRecipeComponent implements OnInit {
 
   private fetchData = (id: string): void => {
     this.loaderService.show();
-    forkJoin({
-      recipe: this.recipesService.getRecipeForUpdate(id),
-    })
+
+    this.recipesService
+      .getRecipeForUpdate(id)
       .pipe(
         finalize(() => {
           this.loaderService.hide();
@@ -98,8 +99,8 @@ export class CreateRecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          if (result.recipe) {
-            this.setRecipeEdit(id, result.recipe);
+          if (result) {
+            this.setRecipeEdit(id, result);
           }
 
           this.initForm();
@@ -214,13 +215,25 @@ export class CreateRecipeComponent implements OnInit {
   };
 
   private save = (): void => {
+    let editRecipe: EditRecipeModel;
+
+    if (this.recipe && this.recipe.id != null) {
+      editRecipe.recipeId = +this.recipe.id;
+      editRecipe.authorId = +this.recipe.authorId;
+      editRecipe.categoryId = this.recipe.categoryId;
+      editRecipe.content = this.recipe.content;
+      editRecipe.mainImageId = this.recipe.mainImageId;
+      editRecipe.shortDescription = this.recipe.shortDescription;
+      editRecipe.title = this.recipe.title;
+    }
+
     this.validateForm();
     if (!this.isRecipeFormInvalid) {
       this.loaderService.show();
       this.updateRecipeModel();
       const action =
         this.recipe && this.recipe.id != null
-          ? this.recipesService.putRecipe(this.recipe)
+          ? this.recipesService.putRecipe(editRecipe)
           : this.recipesService.postRecipe(this.recipe);
       action
         .pipe(
