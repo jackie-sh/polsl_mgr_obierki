@@ -8,4 +8,5 @@ export class RecipeMainPageItemModel {
   rating: number;
   categoryId: number;
   createdDate: Date;
+  mainImageSrc: string;
 }

@@ -66,6 +66,7 @@ a.custom-card:hover {
   position: relative;
   text-align: center;
   color: white;
+  background-color: #f5f8f8;
   height: 180px;
 }
 

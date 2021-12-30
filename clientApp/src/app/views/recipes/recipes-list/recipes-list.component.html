@@ -20,8 +20,8 @@
               <div *ngFor="let recipe of recipes">
                 <div class="mt-4">
                   <a
-                    [routerLink]="'recipe/' + recipe.id"
-                    (click)="navigateToRecipe(article.id)"
+                    [routerLink]="'recipe/details/' + recipe.recipeId"
+                    (click)="navigateToRecipe(recipe.recipeId)"
                     class="custom-card"
                   >
                     <div
@@ -48,19 +48,45 @@
                           <div class="card-body recipe-text-body">
                             <h4
                               class="recipe-card-title"
-                              style="margin-top: -8px"
+                              style="margin-top: -8px; color: #ff5e00"
                             >
                               {{ recipe.title }}
+                              <span style="color: orange">
+                                <ngb-rating
+                                  [rate]="recipe.rating"
+                                  [readonly]="true"
+                                  [max]="5"
+                                ></ngb-rating>
+                                {{ recipe.rating }}
+                              </span>
                             </h4>
+                            <small>
+                              <p>
+                                Autor:
+                                <span style="color: #ff5e00">{{
+                                  recipe.authorName
+                                }}</span>
+                                <br />
+                                Utworzono:
+                                <span style="color: #ff5e00">{{
+                                  recipe.createdDate | date: "dd-MM-yyyy"
+                                }}</span>
+                                <br />
+                                Kategoria:
+                                <span style="color: #ff5e00">{{
+                                  getCategoryName(recipe.categoryId)
+                                }}</span>
+                              </p>
+                            </small>
                             <p
-                              *ngIf="recipe.description != null"
+                              *ngIf="recipe.shortDescription != null"
                               class="
                                 card-text
                                 description-text
                                 recipe-card-description-list
                               "
                             >
-                              {{ recipe.description }}
+                              {{ recipe.shortDescription }}
                             </p>
                           </div>
                         </div>

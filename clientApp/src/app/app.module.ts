@@ -20,6 +20,7 @@ import { RecipesFilterComponent } from './views/recipes/recipes-filter/recipes-f
 import { AppHelper } from 'src/app/infrastructure/helpers/app-helper';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgChatModule } from 'ng-chat';
+import { RecipeComponent } from './views/recipes/recipe/recipe.component';
 
 export function tokenGetter() {
   return localStorage.getItem('ACCESS_TOKEN');
@@ -38,6 +39,7 @@ export function tokenGetter() {
     ConfirmationComponent,
     MyProfileComponent,
     RecipesFilterComponent,
+    RecipeComponent,
   ],
   imports: [
     BrowserModule,

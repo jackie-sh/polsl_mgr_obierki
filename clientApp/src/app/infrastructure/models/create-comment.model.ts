@@ -1,6 +1,6 @@
 export class CreateCommentModel {
   recipeId: number;
-  authorId: number;
+  authorId: string;
   commentText: string;
   rating: number;
 }

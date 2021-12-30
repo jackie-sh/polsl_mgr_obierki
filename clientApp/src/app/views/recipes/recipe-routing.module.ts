@@ -26,7 +26,7 @@ const routes: Routes = [
     },
   },
   {
-    path: '/:id',
+    path: 'recipe-details/:id',
     component: RecipeComponent,
     data: {
       title: 'Przepis kulinarny',

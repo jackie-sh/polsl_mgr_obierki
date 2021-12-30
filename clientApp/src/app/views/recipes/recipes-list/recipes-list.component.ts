@@ -1,11 +1,19 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
-import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { DomHelper } from 'src/app/infrastructure/helpers/dom-helper';
+import { CategoryModel } from 'src/app/infrastructure/models/category.model';
 import { RecipeListItemModel } from 'src/app/infrastructure/models/recipe-list-item.model';
 import { RecipeListModel } from 'src/app/infrastructure/models/recipe-list.model';
+import { RecipeMainPageItemModel } from 'src/app/infrastructure/models/recipe-main-page-item.model';
 import { FilesService } from 'src/app/infrastructure/services/files.service';
 import { LoaderService } from 'src/app/infrastructure/services/loader.service';
 import { RecipesService } from 'src/app/infrastructure/services/recipes.service';
@@ -19,16 +27,40 @@ declare var $: any;
   styleUrls: ['./recipes-list.component.css'],
 })
 export class RecipesListComponent implements OnInit, AfterViewInit {
-  @ViewChild("recipesFilterDesktop", { static: false })
+  @ViewChild('recipesFilterDesktop', { static: false })
   filterRefDesktop: RecipesFilterComponent;
-  
+
   recipeLabel: string = 'Przepisy kulinarne';
 
   notFoundLabel: string = 'Brak wpisów spełniających podane wymagania.';
 
-  recipes: RecipeListItemModel[] = [];
+  //TODO do wywalenia jakieś w tablicy itemy
+  recipes: RecipeMainPageItemModel[] = [
+    {
+      title: 'testowy ttyt',
+      authorName: 'Pawelek1213',
+      recipeId: 23,
+      authorId: '43234',
+      shortDescription:
+        'ewfjeiow jfiewjfiweiofwei fwe jfie hgh wehrowg eygwergo euwr ewr ',
+      mainImageId: 1,
+      rating: 4.6,
+      categoryId: 2,
+      createdDate: new Date(),
+      mainImageSrc:
+        'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/high-protein-dinners-slow-cooker-meatballs-image-5a04d02.jpg?quality=90&resize=500,454',
+    },
+  ];
 
   noRecipes: boolean;
+
+  public categories: CategoryModel[] = [
+    { id: 1, name: 'Śniadanie' },
+    { id: 2, name: 'Obiad' },
+    { id: 3, name: 'Deser' },
+    { id: 4, name: 'Podwieczorek' },
+    { id: 5, name: 'Kolacja' },
+  ];
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -74,7 +106,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
   private fetchRecipes = (): void => {
     this.loaderService.show();
     this.recipesService
-      .getPortalRecipes(this.getRecipesParams())
+      .getAllRecipes(this.getRecipesParams())
       .pipe(
         finalize(() => {
           this.setRecipeMainImg();
@@ -86,24 +118,32 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
       )
       .subscribe(
         (result) => {
-          this.recipes = result.items;
+          this.recipes = result;
         },
-        (error) => {
-
-        }
+        (error) => {}
       );
   };
+
+  public getCategoryName(id: number): string {
+    if (id > this.categories.length || id == 0) {
+      return 'brak kategorii';
+    }
+
+    return this.categories.filter(function (item) {
+      return item.id === id;
+    })[0].name;
+  }
 
   private getRecipesParams = (): HttpParams => {
     let params = new HttpParams();
 
-   // params = this.setFilterRequestParams(params);
+    // params = this.setFilterRequestParams(params);
 
     return params;
   };
 
   navigateToRecipe = (id: number): void => {
-    this.router.navigate([`recipe/${id}`]);
+    this.router.navigate([`recipe/details/${id}`]);
   };
 
   private setRecipeMainImg = (): void => {
@@ -116,9 +156,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
             (result) => {
               this.setMainImgSrc(x, result.body);
             },
-            (error) => {
-
-            }
+            (error) => {}
           );
       }
     });
@@ -129,7 +167,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
   };
 
   private setMainImgSrc = (
-    recipe: RecipeListItemModel,
+    recipe: RecipeMainPageItemModel,
     file: File | Blob
   ): void => {
     let myReader: FileReader = new FileReader();

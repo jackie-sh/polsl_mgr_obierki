@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Route } from '@angular/router';
 import { AboutComponent } from './views/about/about.component';
 import { HomeComponent } from './views/home/home.component';
+import { CreateRecipeComponent } from './views/recipes/create-recipe/create-recipe.component';
+import { RecipeComponent } from './views/recipes/recipe/recipe.component';
 import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
 
 const routes: Route[] = [
@@ -39,12 +41,17 @@ const routes: Route[] = [
     },
   },
   {
-    path: 'recipe',
-    loadChildren: () =>
-      import('./views/recipes/recipe.module').then((m) => m.RecipeModule),
+    path: 'recipe/details/:id',
+    component: RecipeComponent,
     data: {
-      title: 'Przepisy',
-      breadcrumbs: null,
+      title: 'Przepis kulinarny',
+    },
+  },
+  {
+    path: 'recipe/create-recipe',
+    component: CreateRecipeComponent,
+    data: {
+      title: 'Edytuj przepis',
     },
   },
   {

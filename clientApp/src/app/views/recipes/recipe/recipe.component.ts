@@ -7,9 +7,14 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { CategoryModel } from 'src/app/infrastructure/models/category.model';
+import { CommentModel } from 'src/app/infrastructure/models/comment.model';
+import { CreateCommentModel } from 'src/app/infrastructure/models/create-comment.model';
+import { GetRecipeModel } from 'src/app/infrastructure/models/get-recipe.model';
 import { ViewRecipeModel } from 'src/app/infrastructure/models/view-recipe.model';
 import { AuthService } from 'src/app/infrastructure/services/auth.service';
 import { FilesService } from 'src/app/infrastructure/services/files.service';
@@ -25,9 +30,23 @@ export class RecipeComponent implements OnInit {
   @ViewChild('recipeContainer', { static: false })
   recipeContainer: ElementRef;
 
-  recipe: ViewRecipeModel;
+  recipe: GetRecipeModel = new GetRecipeModel();
+
+  comment: CreateCommentModel = new CreateCommentModel();
 
   mainImageSrc: string = '#';
+
+  commentForm: FormGroup;
+
+  isCommentFormInvalid: boolean;
+
+  public categories: CategoryModel[] = [
+    { id: 1, name: 'Śniadanie' },
+    { id: 2, name: 'Obiad' },
+    { id: 3, name: 'Deser' },
+    { id: 4, name: 'Podwieczorek' },
+    { id: 5, name: 'Kolacja' },
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -43,12 +62,41 @@ export class RecipeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.recipe = new ViewRecipeModel();
+    this.recipe = new GetRecipeModel();
+
+    //TODO do wywalenia
+    this.recipe.title = 'Testowy tytuł artykułu';
+    this.recipe.content =
+      ' <h1>Headings</h1><h2>are</h2><h3>great</h3><h4>for</h4><h5>titles</h5><h6>and subtitles</h6>';
+    this.recipe.authorName = 'Pawel123';
+    this.recipe.mainImageId = 2;
+    this.recipe.recipeId = 3;
+    this.recipe.authorId = 3;
+    this.recipe.createdDate = new Date();
+    this.recipe.categoryId = 2;
+    this.recipe.rating = 4.6;
+    this.recipe.shortDescription = 'Jakiś krótki opis artykułu o czym on jest';
+    this.recipe.views = 100;
+    this.recipe.comments = [
+      {
+        userId: '10',
+        content: 'Fajny przepis :))))))))))))))))))))))',
+        rating: 5,
+        userName: 'Pawel132',
+      },
+      {
+        userId: '20',
+        content: 'Nie podoba mi sie',
+        rating: 2,
+        userName: 'Aasfksofj',
+      },
+    ];
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.fetchData(id);
+        this.initForm();
       }
     });
 
@@ -62,16 +110,18 @@ export class RecipeComponent implements OnInit {
   private fetchData = (id: string): void => {
     this.loaderService.show();
     this.recipesService
-      .getRecipeSinglePortal(id)
+      .getRecipeDetails(id)
       .pipe(
         finalize(() => {
           this.loaderService.hide();
+
+          //TODO do wywalenia
+          this.recipeContainer.nativeElement.innerHTML = this.recipe.content;
         })
       )
       .subscribe(
         (result) => {
           this.recipe = result;
-          this.recipe.id = id;
 
           this.recipeContainer.nativeElement.innerHTML = result.content;
 
@@ -80,6 +130,16 @@ export class RecipeComponent implements OnInit {
         (error) => {}
       );
   };
+
+  public getCategoryName(id: number): string {
+    if (id > this.categories.length || id == 0) {
+      return 'brak kategorii';
+    }
+
+    return this.categories.filter(function (item) {
+      return item.id === id;
+    })[0].name;
+  }
 
   private setRecipeMainImg = (id: number): void => {
     this.loaderService.show();
@@ -106,4 +166,64 @@ export class RecipeComponent implements OnInit {
     };
     myReader.readAsDataURL(file);
   };
+
+  private initForm = (): void => {
+    let controls = {};
+
+    controls['comment'] = new FormControl('', Validators.required);
+
+    controls['rating'] = new FormControl(5, Validators.required);
+
+    this.commentForm = new FormGroup(controls);
+  };
+
+  public sendComment() {
+    this.validateForm();
+    if (!this.isCommentFormInvalid) {
+      this.loaderService.show();
+      this.updateCommentModel();
+      this.recipesService
+        .createCommentForRecipe(this.comment)
+        .pipe(
+          finalize(() => {
+            this.loaderService.hide();
+          })
+        )
+        .subscribe(
+          (result) => {
+            window.location.reload();
+          },
+          (error) => {}
+        );
+    }
+  }
+
+  private validateForm = (): void => {
+    this.commentForm.markAllAsTouched();
+    this.isCommentFormInvalid = this.commentForm.invalid;
+  };
+
+  private updateCommentModel = (): void => {
+    this.comment.commentText = this.commentContentControl.value;
+    this.comment.rating = this.commentRatingControl.value;
+    this.comment.recipeId = this.recipe.recipeId;
+    this.comment.authorId = this.authService.loggedId;
+  };
+
+  get commentContentControl() {
+    return this.commentForm.get('comment');
+  }
+
+  get commentRatingControl() {
+    return this.commentForm.get('rating');
+  }
+
+  get isCommentinvalid() {
+    return (
+      this.commentContentControl.invalid &&
+      this.commentContentControl.touched &&
+      this.commentContentControl.errors &&
+      this.commentContentControl.errors.required
+    );
+  }
 }
