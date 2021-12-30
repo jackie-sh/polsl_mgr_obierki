@@ -2,7 +2,6 @@ from django.db import models
 from users.models import User
 
 
-
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
     message = models.CharField(max_length=300)
@@ -15,5 +14,3 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['message', 'pub_date']
-
-

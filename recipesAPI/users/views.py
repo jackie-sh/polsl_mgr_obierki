@@ -1,5 +1,5 @@
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from rest_framework import status, serializers
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import render
@@ -9,6 +9,8 @@ import django.core
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from users.models import User
 from users.serializers import UserSerializer, LoginSerializer
@@ -47,81 +49,78 @@ class LoginView(GenericAPIView):
 
             serializer = UserSerializer(user)
 
-            data = {'id': user.id ,'token': auth_token}
+            data = {'id': user.id, 'token': auth_token}
 
             return JsonResponse(data, status=status.HTTP_200_OK)
 
             # SEND RES
         return JsonResponse({'errorMessage': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-@csrf_exempt
-def getallUsersApi(request):
-    if request.method == 'GET':
-        qs = User.objects.all()
-        data = django.core.serializers.serialize('json', qs)
-        users = User.objects.values('id', 'username')
-        user_serializer_raw = json.dumps(list(users), cls=DjangoJSONEncoder)
-        return HttpResponse(data, content_type="application/json")
 
+class UserDetail(APIView):
+    """
+    Retrieve, update or delete a user instance.
+    """
 
-@csrf_exempt
-def getUserApi(request, id=0):
-    if request.method == 'GET':
-        if username_exists_by_id(id):
-            user = User.objects.get(id=id)
-            return JsonResponse({'id': user.id, 'username': user.username}, safe=False)
-        return JsonResponse({'errorMessage': "User with given id does not exist!"}, safe=False)
-    return JsonResponse({'errorMessage': "This endpoint only serves gets!"}, safe=False)
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
 
+    def get(self, request, pk, format=None):
+        user = self.get_object(pk)
+        user_serializer = UserSerializer(user)
+        return JsonResponse({'id': user_serializer.id, 'username': user_serializer.username}, safe=False)
 
-
-@csrf_exempt
-def addUserApi(request, id=0):
-    if request.method == 'POST':
-        users_data = JSONParser().parse(request)
-        user_serializer = UserSerializer(data=users_data)
+    def put(self, request, pk, format=None):
+        try:
+            user = self.get_object(pk)
+        except Http404 as http404Er:
+            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+                                status=status.HTTP_404_NOT_FOUND)
+        user_serializer = UserSerializer(user, data=request.data)
         try:
             if user_serializer.is_valid(raise_exception=True):
-                if not username_exists_by_name(user_serializer.validated_data['username']):
-                    user_serializer.save()
-                    return JsonResponse({'isCreated': True, 'errorMessage': ""}, safe=False)
-                return JsonResponse({'isCreated': False, 'errorMessage': "User already exists!"}, safe=False)
-            return JsonResponse({'isCreated': False, 'errorMessage': "Incorrect json format!"}, safe=False)
+                user_serializer.save()
+                return JsonResponse({'isUpdated': True, 'errorMessage': ""}, safe=False, status=status.HTTP_200_OK)
         except serializers.ValidationError as valEr:
-            return JsonResponse({'isCreated': False, 'errorMessage': valEr.detail}, safe=False)
-    return JsonResponse({'isCreated': False, 'errorMessage': "This endpoint only serves posts!"}, safe=False)
+            return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
+                                status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        try:
+            user = self.get_object(pk)
+        except Http404 as http404Er:
+            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+                                status=status.HTTP_404_NOT_FOUND)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@csrf_exempt
-def modifyUserApi(request, id=0):
-    if request.method == 'PUT':
-        user_data = JSONParser().parse(request)
-        if not username_exists_by_id(id):
-            return JsonResponse({'isUpdated': False, 'errorMessage': "User with given id does not exist!"}, safe=False)
-        user = User.objects.get(id=id)
-        user_serializer = UserSerializer(user, data=user_data)
-        if user_serializer.is_valid():
-            user_serializer.save()
-            return JsonResponse({'isUpdated': True, 'errorMessage': ""}, safe=False)
-        return JsonResponse({'isUpdated': False, 'errorMessage': "Failed to update user!"}, safe=False)
-    return JsonResponse({'isUpdated': False, 'errorMessage': "This endpoint only serves puts!"}, safe=False)
+class UserList(APIView):
+    """
+    Create or get user instance.
+    """
 
+    def user_exists_by_name(self, name):
+        return User.objects.filter(username=name).exists()
 
-@csrf_exempt
-def deleteUserApi(request, id=0):
-    if request.method == 'DELETE':
-        if username_exists_by_id(id):
-            User.objects.get(id=id).delete()
-            return JsonResponse({'isDeleted': True, 'errorMessage': ""}, safe=False)
-        return JsonResponse({'isDeleted': False, 'errorMessage': " User with given id does not exist!"}, safe=False)
-    return JsonResponse({'isDeleted': False, 'errorMessage': "This endpoint only serves deletes!"}, safe=False)
+    def get(self, request, format=None):
+        users_objects = User.objects.all()
+        data = django.core.serializers.serialize('json', users_objects)
+        return HttpResponse(data, content_type="application/json")
 
-
-
-
-def username_exists_by_name(name):
-    return User.objects.filter(username=name).exists()
-
-
-def username_exists_by_id(id):
-    return User.objects.filter(id=id).exists()
+    def post(self, request, pk, format=None):
+        user_serializer = UserSerializer(data=request.data)
+        try:
+            if user_serializer.is_valid(raise_exception=True):
+                if not self.user_exists_by_name(user_serializer.validated_data['username']):
+                    user_serializer.save()
+                    return JsonResponse({'isCreated': True, 'errorMessage': ""}, safe=False,
+                                        status=status.HTTP_201_CREATED)
+                return JsonResponse({'isCreated': False, 'errorMessage': user_serializer.errors},
+                                    status=status.HTTP_400_BAD_REQUEST)
+        except serializers.ValidationError as valEr:
+            return JsonResponse({'isCreated': False, 'errorMessage': valEr.detail}, safe=False,
+                                status=status.HTTP_400_BAD_REQUEST)
