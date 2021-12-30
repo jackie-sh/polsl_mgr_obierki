@@ -26,9 +26,9 @@ export class RecipesFilterComponent implements OnInit {
 
   searchCategoryLabel: string = 'Kategoria';
 
-  orderByDateDescLabel: string = 'Najstarsze';
+  orderByDateDescLabel: string = ' Najstarsze';
 
-  orderByDateAscLabel: string = 'Najnowsze';
+  orderByDateAscLabel: string = ' Najnowsze';
 
   btnSearchLabel: string = 'Szukaj';
 

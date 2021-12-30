@@ -101,9 +101,8 @@ export class CreateRecipeComponent implements OnInit {
         (result) => {
           if (result) {
             this.setRecipeEdit(id, result);
+            this.initForm();
           }
-
-          this.initForm();
         },
         (error) => {}
       );

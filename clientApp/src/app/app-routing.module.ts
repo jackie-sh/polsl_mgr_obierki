@@ -51,6 +51,13 @@ const routes: Route[] = [
     path: 'recipe/create-recipe',
     component: CreateRecipeComponent,
     data: {
+      title: 'Utwórz przepis',
+    },
+  },
+  {
+    path: 'recipe/create-recipe/:id',
+    component: CreateRecipeComponent,
+    data: {
       title: 'Edytuj przepis',
     },
   },

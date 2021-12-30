@@ -32,4 +32,10 @@ export class UserServiceService {
       `${this.baseApiUrl}/user-profile/profile/${id}`
     );
   };
+
+  deleteUser = (id: string): Observable<Response> => {
+    return this.http.delete<Response>(
+      `${this.baseApiUrl}/users/deleteUser/${id}`
+    );
+  };
 }

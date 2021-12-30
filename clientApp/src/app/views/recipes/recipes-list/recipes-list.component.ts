@@ -113,7 +113,6 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
           this.loaderService.hide();
           this.setNotFound();
           this.showRecipes();
-          sessionStorage.setItem('recipesFilter-key', 'true');
         })
       )
       .subscribe(

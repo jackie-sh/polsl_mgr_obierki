@@ -53,8 +53,8 @@ export class RecipesService {
     );
   };
 
-  deleteRecipe = (id: string): Observable<Response> => {
-    return this.http.get<Response>(
+  deleteRecipe = (id: number): Observable<Response> => {
+    return this.http.delete<Response>(
       `${this.baseApiUrl}/recipes/delete-recipe/${id}`
     );
   };

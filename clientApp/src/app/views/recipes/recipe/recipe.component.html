@@ -8,7 +8,10 @@
         >
           <div class="card-body p-4 p-lg-5 text-black">
             <div class="row pb-2">
-              <span class="h1 fw-bold mb-0">{{ recipe.title }} </span>
+              <span class="h2 fw-bold mb-0" style="color: #ff5e00">
+                {{ recipe.title }}
+                <hr />
+              </span>
             </div>
             <br />
             <div class="row text-center">
@@ -21,14 +24,14 @@
               </div>
               <div class="col-md-3">
                 <div class="counter">
-                  <i class="fa fa-coffee fa-2x"></i>
+                  <i class="fa fa-lightbulb-o fa-2x"></i>
                   <h4 class="count-title count-number">{{ recipe.views }}</h4>
                   <p class="count-text">Ilość wyświetleń</p>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="counter">
-                  <i class="fa fa-lightbulb-o fa-2x"></i>
+                  <i class="fa fa-coffee fa-2x"></i>
                   <h4 class="count-title count-number">
                     {{ getCategoryName(recipe.categoryId) }}
                   </h4>
@@ -82,8 +85,9 @@
             <br />
             <br />
             <br />
-            <div class="col col-xl-12">
-              <h2>Komentarze</h2>
+            <div class="col col-xl-12" style="color: #ff5e00">
+              <h3>Komentarze</h3>
+              <hr />
               <div
                 class="row mt-3"
                 [formGroup]="commentForm"

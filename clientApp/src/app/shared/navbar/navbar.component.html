@@ -50,8 +50,11 @@
           </ng-container>
           <ng-container *ngIf="authService.isLoggedIn">
             <li class="nav-item">
-              <a class="nav-link active">
-                Witaj {{ authService.loggedUserName }}</a
+              <a class="nav-link active" href="/my-profile">
+                Witaj
+                <span style="color: #ff5e00">{{
+                  authService.loggedUserName
+                }}</span></a
               >
             </li>
             <li class="nav-item">

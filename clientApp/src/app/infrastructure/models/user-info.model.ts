@@ -1,5 +1,5 @@
 export class UserInfoModel {
-  userId: number;
+  userId: string;
   name: string;
   rating: number;
   views: number;

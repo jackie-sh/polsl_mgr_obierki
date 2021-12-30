@@ -2,8 +2,11 @@
   <div class="justify-content-around mt-md-2 mt-1">
     <div class="m-md-4 m-1">
       <div class="row">
-        <div class="col-md-12 theme-filter">
-          <h2>{{ recipeLabel }}</h2>
+        <div class="align-items-center mb-3 pb-1">
+          <span class="h2 fw-bold mb-0" style="color: #ff5e00"
+            >{{ recipeLabel }}
+            <hr
+          /></span>
         </div>
       </div>
       <app-recipes-filter
@@ -53,11 +56,10 @@
                               {{ recipe.title }}
                               <span style="color: orange">
                                 <ngb-rating
-                                  [rate]="recipe.rating"
+                                  [rate]="recipe.rating + 0.4"
                                   [readonly]="true"
                                   [max]="5"
                                 ></ngb-rating>
-                                {{ recipe.rating }}
                               </span>
                             </h4>
                             <small>
@@ -66,16 +68,18 @@
                                 <span style="color: #ff5e00">{{
                                   recipe.authorName
                                 }}</span>
-                                <br />
-                                Utworzono:
+                                &nbsp; &nbsp; Utworzono:
                                 <span style="color: #ff5e00">{{
                                   recipe.createdDate | date: "dd-MM-yyyy"
                                 }}</span>
-                                <br />
-                                Kategoria:
+                                &nbsp; &nbsp; Kategoria:
                                 <span style="color: #ff5e00">{{
                                   getCategoryName(recipe.categoryId)
                                 }}</span>
+                                &nbsp; &nbsp; Ocena:
+                                <span style="color: #ff5e00">
+                                  {{ recipe.rating | number: "1.2-2" }}
+                                </span>
                               </p>
                             </small>
                             <p

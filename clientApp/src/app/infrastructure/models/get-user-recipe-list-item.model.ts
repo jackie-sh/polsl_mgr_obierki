@@ -8,4 +8,5 @@ export class GetUserRecipeListItemModel {
   rating: number;
   categoryId: number;
   createdDate: Date;
+  mainImageSrc: string;
 }
