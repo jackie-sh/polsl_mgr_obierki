@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
 
+
 class Rating(models.Model):
     id = models.AutoField(primary_key=True)
     comments = models.CharField(max_length=300)
@@ -13,6 +14,7 @@ class Rating(models.Model):
 
     class Meta:
         ordering = ['comments', 'pub_date']
+
 
 class Recipe(models.Model):
     id = models.AutoField(primary_key=True)
@@ -27,7 +29,3 @@ class Recipe(models.Model):
 
     class Meta:
         ordering = ['recipe_type', 'view_count']
-
-
-
-
