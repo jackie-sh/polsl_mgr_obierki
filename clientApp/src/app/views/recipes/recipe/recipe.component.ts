@@ -62,9 +62,10 @@ export class RecipeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.recipe = new GetRecipeModel();
 
-    //TODO do wywalenia
+    //TODO do wywalenia jak będą endpointy
     this.recipe.title = 'Testowy tytuł artykułu';
     this.recipe.content =
       ' <h1>Headings</h1><h2>are</h2><h3>great</h3><h4>for</h4><h5>titles</h5><h6>and subtitles</h6>';

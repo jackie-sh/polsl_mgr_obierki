@@ -1,23 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+import { CategoryModel } from 'src/app/infrastructure/models/category.model';
+import { GetUserRecipeListItemModel } from 'src/app/infrastructure/models/get-user-recipe-list-item.model';
+import { UserInfoModel } from 'src/app/infrastructure/models/user-info.model';
+import { AuthService } from 'src/app/infrastructure/services/auth.service';
+import { ConfirmationService } from 'src/app/infrastructure/services/confirmation.service';
 import { FilesService } from 'src/app/infrastructure/services/files.service';
 import { LoaderService } from 'src/app/infrastructure/services/loader.service';
 import { RecipesService } from 'src/app/infrastructure/services/recipes.service';
 import { UserServiceService } from 'src/app/infrastructure/services/user-service.service';
 import { Location } from '@angular/common';
-import { GetUserRecipeListItemModel } from 'src/app/infrastructure/models/get-user-recipe-list-item.model';
-import { UserInfoModel } from 'src/app/infrastructure/models/user-info.model';
-import { AuthService } from 'src/app/infrastructure/services/auth.service';
-import { finalize } from 'rxjs/operators';
-import { CategoryModel } from 'src/app/infrastructure/models/category.model';
-import { ConfirmationService } from 'src/app/infrastructure/services/confirmation.service';
 
 @Component({
-  selector: 'app-my-profile',
-  templateUrl: './my-profile.component.html',
-  styleUrls: ['./my-profile.component.css'],
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.css'],
 })
-export class MyProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit {
+  private userId: string;
+
   public userRecipes: GetUserRecipeListItemModel[] = [];
   public userInfo: UserInfoModel = new UserInfoModel();
 
@@ -43,7 +45,13 @@ export class MyProfileComponent implements OnInit {
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-    this.fetchData();
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.userId = id;
+        this.fetchData(id);
+      }
+    });
 
     // TODO do usunięcia jak będą endpointy
     this.userRecipes = [
@@ -81,10 +89,10 @@ export class MyProfileComponent implements OnInit {
     this.userInfo.userId = '2';
   }
 
-  private fetchData = (): void => {
+  private fetchData = (id: string): void => {
     this.loaderService.show();
     this.userService
-      .getUserProfile(this.authService.loggedId)
+      .getUserProfile(id)
       .pipe(
         finalize(() => {
           this.loaderService.hide();
@@ -99,7 +107,7 @@ export class MyProfileComponent implements OnInit {
 
     this.loaderService.show();
     this.userService
-      .getUserRecipes(this.authService.loggedId)
+      .getUserRecipes(id)
       .pipe(
         finalize(() => {
           this.setRecipeMainImg();
@@ -150,80 +158,5 @@ export class MyProfileComponent implements OnInit {
       recipe.mainImageSrc = myReader.result.toString();
     };
     myReader.readAsDataURL(file);
-  };
-
-  onRecipeEdit = (recipeId: number): void => {
-    this.router.navigate([`recipe/create-recipe/${recipeId}`]);
-  };
-
-  onRecipeDelete = (recipeId: number): void => {
-    this.confirmRecipeDelete(recipeId);
-  };
-
-  private confirmRecipeDelete = (recipeId: number): void => {
-    this.confirmationService.createConfirmBase(
-      'usuń',
-      'Przepis zostanie usunięty. Czy chcesz usunąć?',
-      'Tak',
-      'Nie',
-      () => {
-        this.deleteRecipe(recipeId);
-      },
-      () => {}
-    );
-  };
-
-  private deleteRecipe = (recipeId: number): void => {
-    this.loaderService.show();
-
-    this.recipesService
-      .deleteRecipe(recipeId)
-      .pipe(
-        finalize(() => {
-          this.router.navigate([`home`]);
-          this.loaderService.hide();
-        })
-      )
-      .subscribe(
-        (result) => {
-          window.location.reload();
-        },
-        (error) => {}
-      );
-  };
-
-  onUserDelete = (): void => {
-    this.confirmUserDelete(this.authService.loggedId);
-  };
-
-  private confirmUserDelete = (userId: string): void => {
-    this.confirmationService.createConfirmBase(
-      'usuń',
-      'Konto zostanie usunięte. Czy na pewno chcesz usunąć?',
-      'Tak',
-      'Nie',
-      () => {
-        this.deleteUser(userId);
-      },
-      () => {}
-    );
-  };
-
-  private deleteUser = (userId: string): void => {
-    this.loaderService.show();
-
-    this.userService
-      .deleteUser(userId)
-      .pipe(
-        finalize(() => {
-          this.loaderService.hide();
-        })
-      )
-      .subscribe(
-        (result) => {
-          this.authService.logOut();
-        },
-        (error) => {}
-      );
   };
 }

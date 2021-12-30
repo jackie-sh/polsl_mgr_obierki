@@ -65,6 +65,7 @@ export class CreateRecipeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {

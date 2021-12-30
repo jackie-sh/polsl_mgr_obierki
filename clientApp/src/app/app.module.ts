@@ -21,6 +21,7 @@ import { AppHelper } from 'src/app/infrastructure/helpers/app-helper';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgChatModule } from 'ng-chat';
 import { RecipeComponent } from './views/recipes/recipe/recipe.component';
+import { UserProfileComponent } from './views/user/user-profile/user-profile.component';
 
 export function tokenGetter() {
   return localStorage.getItem('ACCESS_TOKEN');
@@ -40,6 +41,7 @@ export function tokenGetter() {
     MyProfileComponent,
     RecipesFilterComponent,
     RecipeComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

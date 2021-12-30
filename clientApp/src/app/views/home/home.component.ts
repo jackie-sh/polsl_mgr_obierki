@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.fetchUsers();
 
     // TODO do usunięcia jak będą endpointy

@@ -5,6 +5,7 @@ import { HomeComponent } from './views/home/home.component';
 import { CreateRecipeComponent } from './views/recipes/create-recipe/create-recipe.component';
 import { RecipeComponent } from './views/recipes/recipe/recipe.component';
 import { MyProfileComponent } from './views/user/my-profile/my-profile.component';
+import { UserProfileComponent } from './views/user/user-profile/user-profile.component';
 
 const routes: Route[] = [
   {
@@ -29,6 +30,14 @@ const routes: Route[] = [
     data: {
       title: 'Mój profil',
       breadcrumbs: 'Mój profil',
+    },
+  },
+  {
+    path: 'user-profile/:id',
+    component: UserProfileComponent,
+    data: {
+      title: 'Profil użytkownika',
+      breadcrumbs: 'Profil użytkownika',
     },
   },
   {
