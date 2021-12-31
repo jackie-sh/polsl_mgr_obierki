@@ -1,7 +1,6 @@
 from django.urls import path
-from recipes import views
 
-from recipesAPI.recipes import views
+from recipes import views
 
 urlpatterns = [
     path('api/recipes/get-recipe/<int:pk>', views.RecipeDetails.as_view()),

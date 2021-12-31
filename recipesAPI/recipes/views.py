@@ -3,9 +3,9 @@ from rest_framework import status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from recipesAPI.recipes.models import Recipe
-from recipesAPI.recipes.serializers import RecipeSerializer
-from recipesAPI.recipesBackend.models import Message
+from .models import Recipe
+from .serializers import RecipeSerializer
+from .models import Message
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
