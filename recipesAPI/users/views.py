@@ -76,8 +76,8 @@ class UserDetail(APIView):
     def put(self, request, pk, format=None):
         try:
             user = self.get_object(pk)
-        except Http404 as http404Er:
-            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+        except Http404:
+            return JsonResponse({'isUpdated': False, 'errorMessage': "User does not exists"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         user_serializer = UserSerializer(user, data=request.data)
         try:
@@ -91,8 +91,8 @@ class UserDetail(APIView):
     def delete(self, request, pk, format=None):
         try:
             user = self.get_object(pk)
-        except Http404 as http404Er:
-            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+        except Http404:
+            return JsonResponse({'isUpdated': False, 'errorMessage': "User does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

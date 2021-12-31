@@ -61,8 +61,8 @@ class RecipeDetails(APIView):
     def get(self, request, pk, format=None):
         try:
             recipe = self.get_recipe_object(pk)
-        except Http404 as http404Er:
-            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+        except Http404:
+            return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         recipe_serializer = RecipeSerializer(recipe, data=request.data)
         try:
@@ -81,8 +81,8 @@ class RecipeDetails(APIView):
     def put(self, request, pk, format=None):
         try:
             recipe = self.get_recipe_object(pk)
-        except Http404 as http404Er:
-            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+        except Http404:
+            return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         recipe_serializer = RecipeSerializer(recipe, data=request.data)
         try:
@@ -96,8 +96,8 @@ class RecipeDetails(APIView):
     def delete(self, request, pk, format=None):
         try:
             user = self.get_recipe_object(pk)
-        except Http404 as http404Er:
-            return JsonResponse({'isUpdated': False, 'errorMessage': http404Er}, safe=False,
+        except Http404:
+            return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
