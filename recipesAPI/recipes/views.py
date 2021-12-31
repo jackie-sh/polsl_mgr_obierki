@@ -67,7 +67,7 @@ class RecipeDetails(APIView):
         recipe_serializer = RecipeSerializer(recipe, data=request.data)
         try:
             if recipe_serializer.is_valid(raise_exception=True):
-                recipe_serializer.views += 1
+                recipe_serializer['views'] += 1
                 recipe_serializer.save()
                 recipe_modified = self.get_recipe_object(pk)
                 recipe_serializer_modified = RecipeSerializer(recipe, data=request.data)
