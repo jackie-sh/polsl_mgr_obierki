@@ -96,18 +96,15 @@ class RecipeDetails(APIView):
 class RecipeView(GenericAPIView):
     serializer_class = RecipeSerializer
 
-    def recipe_exists_by_name(self, name):
-        return Recipe.objects.filter(username=name).exists()
-
     @swagger_auto_schema(tags=["recipe"],
          request_body= Schema(
             type=TYPE_OBJECT,
             properties={
                 'title': Schema(type=TYPE_STRING),
                 'content': Schema (type=TYPE_STRING),
-                'categoryId': Schema (type=TYPE_INTEGER, default=1),
+                'categoryId': Schema (type=TYPE_INTEGER),
                 'shortDescription': Schema(type=TYPE_STRING),
-                'mainImageId' : Schema(type=TYPE_INTEGER, default=1)
+                'mainImageId' : Schema(type=TYPE_INTEGER)
             }
         ),
         responses = {
@@ -119,23 +116,14 @@ class RecipeView(GenericAPIView):
     def post(self, request):
         data = request.data
         data['category'] = data['categoryId']
+        data['author'] = request.user.id
+        data['view_count'] = 0
         serializer = RecipeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             data = {'isCreated': True}
             return JsonResponse(data, status=status.HTTP_201_CREATED)
 
-        data = {'isCreated': True, 'errorMessage': serializer.errors}
+        data = {'isCreated': False, 'errorMessage': serializer.errors}
         return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            if recipe_serializer.is_valid(raise_exception=True):
-                if not self.recipe_exists_by_name(recipe_serializer.validated_data['username']):
-                    recipe_serializer.save()
-                    return JsonResponse({'isCreated': True, 'errorMessage': ""}, safe=False,
-                                        status=status.HTTP_201_CREATED)
-                return JsonResponse({'isCreated': False, 'errorMessage': recipe_serializer.errors},
-                                    status=status.HTTP_400_BAD_REQUEST)
-        except serializers.ValidationError as valEr:
-            return JsonResponse({'isCreated': False, 'errorMessage': valEr.detail}, safe=False,
-                                status=status.HTTP_400_BAD_REQUEST)
