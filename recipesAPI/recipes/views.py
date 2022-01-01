@@ -1,5 +1,9 @@
 from django.http import JsonResponse, HttpResponse, Http404
+from drf_yasg.openapi import *
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, serializers
+from rest_framework.decorators import api_view, action
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,24 +15,7 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 from rest_framework import status
 
-
-def get_recipe(request, id):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
-
-
-def create_recipe(request):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
-
-
 def upload_main_image(request, id):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
-
-
-def edit_recipe(request, id):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
-
-
-def delete_recipe(request, id):
     return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
 
 
@@ -58,6 +45,7 @@ class RecipeDetails(APIView):
         except Recipe.DoesNotExist:
             raise Http404
 
+    #@swagger_auto_schema(tags=["recipe"])
     def get(self, request, pk, format=None):
         try:
             recipe = self.get_recipe_object(pk)
@@ -78,6 +66,7 @@ class RecipeDetails(APIView):
             return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
                                 status=status.HTTP_400_BAD_REQUEST)
 
+    #@swagger_auto_schema(tags=["recipe"])
     def put(self, request, pk, format=None):
         try:
             recipe = self.get_recipe_object(pk)
@@ -93,6 +82,7 @@ class RecipeDetails(APIView):
             return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
                                 status=status.HTTP_400_BAD_REQUEST)
 
+    #@swagger_auto_schema(tags=["recipe"])
     def delete(self, request, pk, format=None):
         try:
             user = self.get_recipe_object(pk)
@@ -103,13 +93,41 @@ class RecipeDetails(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class RecipeInit(APIView):
+class RecipeView(GenericAPIView):
+    serializer_class = RecipeSerializer
 
     def recipe_exists_by_name(self, name):
         return Recipe.objects.filter(username=name).exists()
 
-    def post(self, request, pk, format=None):
-        recipe_serializer = RecipeSerializer(data=request.data)
+    @swagger_auto_schema(tags=["recipe"],
+         request_body= Schema(
+            type=TYPE_OBJECT,
+            properties={
+                'title': Schema(type=TYPE_STRING),
+                'content': Schema (type=TYPE_STRING),
+                'categoryId': Schema (type=TYPE_INTEGER, default=1),
+                'shortDescription': Schema(type=TYPE_STRING),
+                'mainImageId' : Schema(type=TYPE_INTEGER, default=1)
+            }
+        ),
+        responses = {
+            status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                properties={'isCreated': Schema(type=TYPE_BOOLEAN)}
+            )
+        }
+    )
+    def post(self, request):
+        data = request.data
+        data['category'] = data['categoryId']
+        serializer = RecipeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            data = {'isCreated': True}
+            return JsonResponse(data, status=status.HTTP_201_CREATED)
+
+        data = {'isCreated': True, 'errorMessage': serializer.errors}
+        return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             if recipe_serializer.is_valid(raise_exception=True):
                 if not self.recipe_exists_by_name(recipe_serializer.validated_data['username']):

@@ -1,5 +1,7 @@
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse, HttpResponse, Http404
+from drf_yasg.openapi import Schema, TYPE_STRING, TYPE_OBJECT
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, serializers
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import render
@@ -23,6 +25,7 @@ import jwt
 class RegisterView(GenericAPIView):
     serializer_class = UserSerializer
 
+    @swagger_auto_schema(tags=["user"])
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -30,13 +33,22 @@ class RegisterView(GenericAPIView):
             data = {'isCreated': True}
             return JsonResponse(data, status=status.HTTP_201_CREATED)
 
-        data = {'isCreated': True, 'errorMessage': serializer.errors}
+        data = {'isCreated': False, 'errorMessage': serializer.errors}
         return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
 
+    @swagger_auto_schema(tags=["user"],
+         request_body= Schema(
+            type=TYPE_OBJECT,
+            properties={
+                'username': Schema(type=TYPE_STRING),
+                'password': Schema (type=TYPE_STRING),
+            }
+        )
+    )
     def post(self, request):
         data = request.data
         username = data.get('username', '')

@@ -1,35 +1,41 @@
 from django.db import models
 from users.models import User
 
+class RecipeImage(models.Model):
+    file = models.ImageField(blank=True) #TODO until file upload complete this is tru
+
+class RecipeCategory(models.Model):
+    name = models.CharField(max_length=30)
+
+class Recipe(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=30, default="")
+    content = models.CharField(max_length=1000, default="")
+    shortDescription = models.CharField(max_length=100, default="")
+    category = models.ForeignKey(RecipeCategory, on_delete=models.PROTECT)
+    mainImage = models.ForeignKey(RecipeImage, on_delete=models.SET_NULL, null=True)
+
+    view_count = models.IntegerField()
+
+    def __str__(self):
+        return "%s" % self.title
+
+    class Meta:
+        ordering = ['view_count']
+
 
 class Rating(models.Model):
-    id = models.AutoField(primary_key=True)
     comments = models.CharField(max_length=300)
     rating = models.IntegerField()
-    pub_date = models.DateField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pub_date = models.DateField(auto_created=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s %s" % (self.comments, self.rating)
 
     class Meta:
         ordering = ['comments', 'pub_date']
-
-
-class Recipe(models.Model):
-    id = models.AutoField(primary_key=True)
-    description = models.CharField(max_length=300)
-    recipe_type = models.CharField(max_length=30)
-    view_count = models.IntegerField()
-    rating = models.ManyToManyField(Rating)
-    file = models.FileField(blank=False, null=False)
-
-    def __str__(self):
-        return "%s %s %s %s" % (self.description, self.view_count, self.recipe_type, self.file)
-
-    class Meta:
-        ordering = ['recipe_type', 'view_count']
-
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)

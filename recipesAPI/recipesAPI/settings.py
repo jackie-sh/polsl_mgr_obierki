@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'drf_yasg',
-    'recipesBackend.apps.RecipesBackendConfig',
+    'tempScratchpad.apps.RecipesBackendConfig',
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig'
 ]

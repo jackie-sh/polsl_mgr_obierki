@@ -1,0 +1,30 @@
+[
+  {
+    "model": "recipes.RecipeCategory",
+    "pk": 1,
+    "fields": {
+      "name": "Breakfast"
+    }
+  },
+  {
+    "model": "recipes.RecipeCategory",
+    "pk": 2,
+    "fields": {
+      "name": "Lunch"
+    }
+  },
+  {
+    "model": "recipes.RecipeCategory",
+    "pk": 3,
+    "fields": {
+      "name": "Dinner"
+    }
+  },
+  {
+    "model": "recipes.RecipeImage",
+    "pk": 1,
+    "fields": {
+      "file": null
+    }
+  }
+]
