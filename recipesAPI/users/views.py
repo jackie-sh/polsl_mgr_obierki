@@ -1,8 +1,10 @@
+import rest_framework_simplejwt.views
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse, HttpResponse, Http404
 from drf_yasg.openapi import Schema, TYPE_STRING, TYPE_OBJECT
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, serializers
+from rest_framework import status, serializers, permissions
+from rest_framework.decorators import api_view
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import render
 import json
@@ -13,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
 from users.serializers import UserSerializer, LoginSerializer
@@ -24,6 +27,7 @@ import jwt
 
 class RegisterView(GenericAPIView):
     serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
     @swagger_auto_schema(tags=["user"])
     def post(self, request):
@@ -39,6 +43,7 @@ class RegisterView(GenericAPIView):
 
 class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
+    permission_classes = [permissions.AllowAny]
 
     @swagger_auto_schema(tags=["user"],
          request_body= Schema(
@@ -56,18 +61,27 @@ class LoginView(GenericAPIView):
         user = auth.authenticate(username=username, password=password)
 
         if user:
-            auth_token = jwt.encode(
-                {'username': user.username}, settings.JWT_SECRET_KEY, algorithm="HS256")
-
-            serializer = UserSerializer(user)
-
-            data = {'id': user.id, 'token': auth_token}
-
+            token = RefreshToken.for_user(user)
+            data = {'id': user.id, 'accessToken': str(token.access_token), 'refreshToken': str(token)}
             return JsonResponse(data, status=status.HTTP_200_OK)
 
-            # SEND RES
         return JsonResponse({'errorMessage': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+class LoginRefreshView(GenericAPIView):
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(tags=["user"],
+                         request_body=Schema(
+                             type=TYPE_OBJECT,
+                             properties={
+                                 'refreshToken': Schema(type=TYPE_STRING)
+                             }
+                         )
+                     )
+    def post(self, request):
+        #token = RefreshToken(request.data['refreshToken'])
+        return JsonResponse({}, status=status.HTTP_501_NOT_IMPLEMENTED)
 
 class UserDetail(APIView):
     """
@@ -139,3 +153,5 @@ class UserList(APIView):
         except serializers.ValidationError as valEr:
             return JsonResponse({'isCreated': False, 'errorMessage': valEr.detail}, safe=False,
                                 status=status.HTTP_400_BAD_REQUEST)
+
+

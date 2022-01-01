@@ -2,15 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b698e5a-353e-4318-a8ea-9b7542815cab" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/datadump.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipesAPI/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipesAPI/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipesAPI/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipesAPI/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/backends.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +124,7 @@
       <workItem from="1640703949604" duration="9460000" />
       <workItem from="1640881737245" duration="1010000" />
       <workItem from="1640953622253" duration="2354000" />
-      <workItem from="1640978156345" duration="18508000" />
+      <workItem from="1640978156345" duration="22995000" />
     </task>
     <servers />
   </component>

@@ -36,7 +36,7 @@ urlpatterns = [
     path('api/auth/', include('rest_framework.urls')),
 
     url(r'^', include('tempScratchpad.urls')),
-    path('', include('users.urls')),
+    path('', include('users.urls'), name="users"),
     path('api/recipes/', include('recipes.urls'), name="recipes"),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
