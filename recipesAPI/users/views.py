@@ -80,8 +80,8 @@ class LoginRefreshView(GenericAPIView):
                          )
                      )
     def post(self, request):
-        #token = RefreshToken(request.data['refreshToken'])
-        return JsonResponse({}, status=status.HTTP_501_NOT_IMPLEMENTED)
+        token = RefreshToken(request.data['refreshToken'])
+        return JsonResponse({'accessToken': str(token.access_token)}, status=status.HTTP_501_NOT_IMPLEMENTED)
 
 class UserDetail(APIView):
     """
