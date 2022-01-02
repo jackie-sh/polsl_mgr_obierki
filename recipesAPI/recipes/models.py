@@ -16,29 +16,31 @@ class Recipe(models.Model):
     mainImage = models.ForeignKey(RecipeImage, on_delete=models.SET_NULL, null=True)
 
     view_count = models.IntegerField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "%s" % self.title
 
     class Meta:
-        ordering = ['view_count']
+        ordering = ['create_date', 'view_count']
 
 
 class Rating(models.Model):
-    comments = models.CharField(max_length=300)
-    rating = models.IntegerField()
-    pub_date = models.DateField(auto_created=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    commentText = models.CharField(max_length=300)
+    rating = models.IntegerField()
+
+    create_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "%s %s" % (self.comments, self.rating)
+        return "%s %s" % (self.create_date, self.rating)
 
     class Meta:
-        ordering = ['comments', 'pub_date']
+        ordering = ['create_date']
 
 class Message(models.Model):
-    id = models.AutoField(primary_key=True)
     message = models.CharField(max_length=300)
     pub_date = models.DateField()
     senderID = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")

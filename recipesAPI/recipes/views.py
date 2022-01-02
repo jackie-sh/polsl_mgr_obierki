@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Recipe, RecipeCategory
-from .serializers import RecipeSerializer, RecipeCategorySerializer
+from .serializers import RecipeSerializer, RecipeCategorySerializer, RatingSerializer
 from .models import Message
 from django.http import HttpResponse, JsonResponse
 
@@ -33,6 +33,15 @@ def get_image(request, id):
 def create_comment(request, id):
     return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
 
+
+def create_response(serializer):
+    if serializer.is_valid():
+        serializer.save()
+        data = {'isCreated': True, 'id': serializer.data.get('id')}
+        return JsonResponse(data, status=status.HTTP_201_CREATED)
+
+    data = {'isCreated': False, 'errorMessage': serializer.errors}
+    return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
 
 class RecipeGetView(GenericAPIView):
     serializer_class = RecipeSerializer
@@ -81,7 +90,7 @@ class RecipeCreateView(GenericAPIView):
         ),
         responses = {
             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                properties={'isCreated': Schema(type=TYPE_BOOLEAN)}
+                properties={'isCreated': Schema(type=TYPE_BOOLEAN), 'id': Schema(type=TYPE_INTEGER)}
             )
         }
     )
@@ -90,15 +99,8 @@ class RecipeCreateView(GenericAPIView):
         data['category'] = data['categoryId']
         data['author'] = request.user.id
         data['view_count'] = 0
-        serializer = RecipeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            data = {'isCreated': True}
-            return JsonResponse(data, status=status.HTTP_201_CREATED)
-
-        data = {'isCreated': False, 'errorMessage': serializer.errors}
-        return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
-
+        serializer = RecipeSerializer(data=data)
+        return create_response(serializer)
 
 class RecipeEditView(GenericAPIView):
     serializer_class = RecipeSerializer
@@ -129,7 +131,6 @@ class RecipeEditView(GenericAPIView):
             return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
                                 status=status.HTTP_400_BAD_REQUEST)
 
-
 class RecipeDeleteView(GenericAPIView):
     serializer_class = RecipeSerializer
 
@@ -148,7 +149,6 @@ class RecipeDeleteView(GenericAPIView):
         return JsonResponse({'isDeleted': True}, safe=False,
                             status=status.HTTP_404_NOT_FOUND)
 
-
 class RecipeCategoryView(GenericAPIView):
     serializer_class = RecipeCategorySerializer
 
@@ -157,3 +157,22 @@ class RecipeCategoryView(GenericAPIView):
         categories = RecipeCategory.objects.all()
         serializer = RecipeCategorySerializer(categories, many=True)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
+
+class RecipeCreateCommentView(GenericAPIView):
+    serializer_class = RatingSerializer
+
+    @swagger_auto_schema(tags=["recipe"],
+                         request_body=Schema(
+                             type=TYPE_OBJECT,
+                             properties={
+                                 'recipeId': Schema(type=TYPE_INTEGER),
+                                 'commentText': Schema(type=TYPE_STRING),
+                                 'rating': Schema(type=TYPE_INTEGER)
+                             }
+                         ))
+    def post(self, request, format=None):
+        data = request.data
+        data['recipe'] = data['recipeId']
+        data['author'] = request.user.id
+        serializer = RatingSerializer(data=data)
+        return create_response(serializer)
