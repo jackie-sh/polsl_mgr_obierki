@@ -34,35 +34,6 @@ def create_comment(request, id):
     return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
 
 
-class RecipeDetails(APIView):
-
-    #@swagger_auto_schema(tags=["recipe"])
-    def put(self, request, pk, format=None):
-        try:
-            recipe = self.get_recipe_object(pk)
-        except Http404:
-            return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
-                                status=status.HTTP_404_NOT_FOUND)
-        recipe_serializer = RecipeSerializer(recipe, data=request.data)
-        try:
-            if recipe_serializer.is_valid(raise_exception=True):
-                recipe_serializer.save()
-                return JsonResponse({'isUpdated': True, 'errorMessage': ""}, safe=False, status=status.HTTP_200_OK)
-        except serializers.ValidationError as valEr:
-            return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
-                                status=status.HTTP_400_BAD_REQUEST)
-
-    #@swagger_auto_schema(tags=["recipe"])
-    def delete(self, request, pk, format=None):
-        try:
-            user = self.get_recipe_object(pk)
-        except Http404:
-            return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
-                                status=status.HTTP_404_NOT_FOUND)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 class RecipeGetView(GenericAPIView):
     serializer_class = RecipeSerializer
 
@@ -127,6 +98,55 @@ class RecipeCreateView(GenericAPIView):
 
         data = {'isCreated': False, 'errorMessage': serializer.errors}
         return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecipeEditView(GenericAPIView):
+    serializer_class = RecipeSerializer
+
+    @swagger_auto_schema(tags=["recipe"],
+                         request_body=Schema(
+                             type=TYPE_OBJECT,
+                             properties={
+                                 'title': Schema(type=TYPE_STRING),
+                                 'content': Schema(type=TYPE_STRING),
+                                 'categoryId': Schema(type=TYPE_INTEGER),
+                                 'shortDescription': Schema(type=TYPE_STRING),
+                                 'mainImageId': Schema(type=TYPE_INTEGER)
+                             }
+                         ))
+    def put(self, request, pk, format=None):
+        try:
+            recipe = recipe = Recipe.objects.get(pk=pk)
+        except Http404:
+            return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
+                                status=status.HTTP_404_NOT_FOUND)
+        recipe_serializer = RecipeSerializer(recipe, data=request.data, partial=True)
+        try:
+            if recipe_serializer.is_valid(raise_exception=True):
+                recipe_serializer.save()
+                return JsonResponse({'isUpdated': True, 'errorMessage': ""}, status=status.HTTP_200_OK)
+        except serializers.ValidationError as valEr:
+            return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
+                                status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecipeDeleteView(GenericAPIView):
+    serializer_class = RecipeSerializer
+
+    @swagger_auto_schema(tags=["recipe"])
+    def delete(self, request, pk, format=None):
+        try:
+            recipe = Recipe.objects.get(pk=pk)
+        except Http404:
+            return JsonResponse({'isDeleted': False, 'errorMessage': "Recipe does not exist"}, safe=False,
+                                status=status.HTTP_404_NOT_FOUND)
+        if recipe.author.id != request.user.id:
+            return JsonResponse({'isDeleted': False, 'errorMessage': "User does not own the recipe"}, safe=False,
+                                status=status.HTTP_401_UNAUTHORIZED)
+
+        recipe.delete()
+        return JsonResponse({'isDeleted': True}, safe=False,
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 class RecipeCategoryView(GenericAPIView):
