@@ -1,3 +1,6 @@
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse, HttpResponse, Http404
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
@@ -7,7 +10,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Recipe
+from .models import Recipe, RecipeCategory
 from .serializers import RecipeSerializer
 from .models import Message
 from django.http import HttpResponse, JsonResponse
@@ -125,3 +128,12 @@ class RecipeCreateView(GenericAPIView):
         data = {'isCreated': False, 'errorMessage': serializer.errors}
         return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
 
+
+class RecipeCategoryView(GenericAPIView):
+    #serializer_class = RecipeSerializer
+
+    @swagger_auto_schema(tags=["recipe"])
+    def get(self,request):
+        categories = RecipeCategory.objects.values('id', 'name')
+        data = json.dumps(list(categories), cls=DjangoJSONEncoder)
+        return HttpResponse(data, status=status.HTTP_201_CREATED)

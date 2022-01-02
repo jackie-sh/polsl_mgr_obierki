@@ -11,4 +11,5 @@ urlpatterns = [
     path('get-all/', views.get_all),
     path('get-image/<int:id>/', views.get_image),
     path('create-comment/<int:id>/', views.create_comment),
+    path('get-categories/', views.RecipeCategoryView.as_view()),
 ]
