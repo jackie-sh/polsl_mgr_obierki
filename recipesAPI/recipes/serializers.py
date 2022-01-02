@@ -10,7 +10,7 @@ class RecipeCategorySerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ['id', 'author', 'recipe', 'commentText', 'rating']
+        fields = ['id', 'author', 'recipe', 'commentText', 'rating', 'create_date']
 
 
     def validate_rating(self, value):
@@ -22,10 +22,19 @@ class RatingSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ['id', 'author', 'title', 'content', 'shortDescription', 'category', 'mainImage', 'view_count']
+        fields = ['id', 'author', 'title', 'content', 'shortDescription', 'category', 'mainImage', 'view_count', 'create_date', 'update_date']
 
     def validate(self, data):
         return data
 
     def create(self, validated_data):
         return Recipe.objects.create(**validated_data)
+
+
+class RecipeFullViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ['title', 'content', 'authorName', 'recipeId', 'authorId', 'createdDate', 'mainImageId', 'categoryId', 'rating', 'shortDescription', 'views', 'comments']
+
+
+    #authorName

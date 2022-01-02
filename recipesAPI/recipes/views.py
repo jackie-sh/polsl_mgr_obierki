@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Recipe, RecipeCategory
-from .serializers import RecipeSerializer, RecipeCategorySerializer, RatingSerializer
+from .serializers import *
 from .models import Message
 from django.http import HttpResponse, JsonResponse
 
@@ -64,13 +64,15 @@ class RecipeGetView(GenericAPIView):
     def get(self, request, pk, format=None):
         try:
             recipe = Recipe.objects.get(pk=pk)
-        except Http404:
+        except Recipe.DoesNotExist:
             return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
         recipe_serializer = RecipeSerializer(recipe, data={'view_count': recipe.view_count + 1}, partial=True)
         try:
             if recipe_serializer.is_valid(raise_exception=True):
                 recipe_serializer.save()
-                return JsonResponse(recipe_serializer.data, safe=False, status=status.HTTP_200_OK)
+                recipe = Recipe.objects.get(pk=pk)
+                serializer_view = RecipeFullViewSerializer(recipe)
+                return JsonResponse(serializer_view.data, safe=False, status=status.HTTP_200_OK)
         except serializers.ValidationError as valEr:
             return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -118,8 +120,8 @@ class RecipeEditView(GenericAPIView):
                          ))
     def put(self, request, pk, format=None):
         try:
-            recipe = recipe = Recipe.objects.get(pk=pk)
-        except Http404:
+            recipe = Recipe.objects.get(pk=pk)
+        except Recipe.DoesNotExist:
             return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         recipe_serializer = RecipeSerializer(recipe, data=request.data, partial=True)
@@ -138,7 +140,7 @@ class RecipeDeleteView(GenericAPIView):
     def delete(self, request, pk, format=None):
         try:
             recipe = Recipe.objects.get(pk=pk)
-        except Http404:
+        except Recipe.DoesNotExist:
             return JsonResponse({'isDeleted': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
         if recipe.author.id != request.user.id:
@@ -171,6 +173,11 @@ class RecipeCreateCommentView(GenericAPIView):
                              }
                          ))
     def post(self, request, format=None):
+        try:
+            recipe = Recipe.objects.get(pk=request.data['recipeId'])
+        except Recipe.DoesNotExist:
+            return JsonResponse({'isDeleted': False, 'errorMessage': "Recipe does not exist"}, safe=False,
+                                status=status.HTTP_404_NOT_FOUND)
         data = request.data
         data['recipe'] = data['recipeId']
         data['author'] = request.user.id
