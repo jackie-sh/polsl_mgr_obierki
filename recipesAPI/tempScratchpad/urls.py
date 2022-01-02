@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from recipesBackend import views
+from tempScratchpad import views
 
 urlpatterns = [
     url(r'^api/recipes/upload-main-image', views.SaveFile),

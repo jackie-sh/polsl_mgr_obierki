@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from recipesBackend.models import Message
+from tempScratchpad.models import Message
 
 
 class MessageSerializer(serializers.ModelSerializer):
