@@ -136,8 +136,8 @@ class UserList(APIView):
         return User.objects.filter(username=name).exists()
 
     def get(self, request, format=None):
-        users_objects = User.objects.all()
-        data = django.core.serializers.serialize('json', users_objects)
+        users = User.objects.values('id', 'username')
+        data = json.dumps(list(users), cls=DjangoJSONEncoder)
         return HttpResponse(data, content_type="application/json")
 
     def post(self, request, pk, format=None):
