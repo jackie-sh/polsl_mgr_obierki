@@ -1,6 +1,11 @@
-from recipes.models import Rating, Recipe
+from recipes.models import *
 from rest_framework import serializers
 
+
+class RecipeCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeCategory
+        fields = ['id', 'name']
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:

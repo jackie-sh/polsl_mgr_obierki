@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Recipe, RecipeCategory
-from .serializers import RecipeSerializer
+from .serializers import RecipeSerializer, RecipeCategorySerializer
 from .models import Message
 from django.http import HttpResponse, JsonResponse
 
@@ -130,10 +130,10 @@ class RecipeCreateView(GenericAPIView):
 
 
 class RecipeCategoryView(GenericAPIView):
-    #serializer_class = RecipeSerializer
+    serializer_class = RecipeCategorySerializer
 
     @swagger_auto_schema(tags=["recipe"])
     def get(self,request):
-        categories = RecipeCategory.objects.values('id', 'name')
-        data = json.dumps(list(categories), cls=DjangoJSONEncoder)
-        return HttpResponse(data, status=status.HTTP_201_CREATED)
+        categories = RecipeCategory.objects.all()
+        serializer = RecipeCategorySerializer(categories, many=True)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
