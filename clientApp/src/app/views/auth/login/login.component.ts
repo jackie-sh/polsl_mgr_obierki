@@ -76,7 +76,6 @@ export class LoginComponent implements OnInit {
       )
       .subscribe(
         (response) => {
-          console.log(response);
           this.router.navigate([this.redirectUrl]);
         },
         (error) => {

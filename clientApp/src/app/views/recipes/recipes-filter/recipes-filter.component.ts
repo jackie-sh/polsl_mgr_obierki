@@ -78,4 +78,8 @@ export class RecipesFilterComponent implements OnInit {
   onFilterSubmit = (): void => {
     this.onFilterFormSubmit.emit();
   };
+
+  getActiveFilters = (): any => {
+    return this.filterForm.value;
+  };
 }

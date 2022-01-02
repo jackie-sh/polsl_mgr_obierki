@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UserDetailsModel } from '../models/user-details.model';
 import { Observable } from 'rxjs';
 import { GetUserRecipeListItemModel } from 'src/app/infrastructure/models/get-user-recipe-list-item.model';
@@ -15,8 +15,16 @@ export class UserServiceService {
   ) {}
 
   getAllUsers = (): Observable<UserDetailsModel[]> => {
+    /*
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+      }),
+    };
+*/
     return this.http.get<UserDetailsModel[]>(
-      `${this.baseApiUrl}/users/getAllUsersr`,
+      `${this.baseApiUrl}/users/getAllUsers`,
       {}
     );
   };

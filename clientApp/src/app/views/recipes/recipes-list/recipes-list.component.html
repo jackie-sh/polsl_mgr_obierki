@@ -16,7 +16,11 @@
       <div class="row mt-4 no-gutters">
         <div class="col-md-12">
           <div class="mt-2">
-            <ng-container *ngIf="noRecipes">
+            <ng-container
+              *ngIf="
+                noRecipes == true || recipes == null || recipes.length == 0
+              "
+            >
               {{ notFoundLabel }}
             </ng-container>
             <ng-container *ngIf="!noRecipes">

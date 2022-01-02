@@ -23,10 +23,6 @@ import { NgChatModule } from 'ng-chat';
 import { RecipeComponent } from './views/recipes/recipe/recipe.component';
 import { UserProfileComponent } from './views/user/user-profile/user-profile.component';
 
-export function tokenGetter() {
-  return localStorage.getItem('ACCESS_TOKEN');
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,8 +52,10 @@ export function tokenGetter() {
     NgChatModule,
     JwtModule.forRoot({
       config: {
-        tokenGetter: tokenGetter,
-        allowedDomains: [AppHelper.getBaseUrl()],
+        tokenGetter: () => {
+          return localStorage.getItem('ACCESS_TOKEN');
+        },
+        allowedDomains: [AppHelper.getBaseUrl(), AppHelper.getServerUrl()],
         disallowedRoutes: [],
       },
     }),

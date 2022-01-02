@@ -34,23 +34,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
 
   notFoundLabel: string = 'Brak wpisów spełniających podane wymagania.';
 
-  //TODO do wywalenia jakieś w tablicy itemy
-  recipes: RecipeMainPageItemModel[] = [
-    {
-      title: 'testowy ttyt',
-      authorName: 'Pawelek1213',
-      recipeId: 23,
-      authorId: '43234',
-      shortDescription:
-        'ewfjeiow jfiewjfiweiofwei fwe jfie hgh wehrowg eygwergo euwr ewr ',
-      mainImageId: 1,
-      rating: 4.6,
-      categoryId: 2,
-      createdDate: new Date(),
-      mainImageSrc:
-        'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/high-protein-dinners-slow-cooker-meatballs-image-5a04d02.jpg?quality=90&resize=500,454',
-    },
-  ];
+  recipes: RecipeMainPageItemModel[] = [];
 
   noRecipes: boolean;
 
@@ -71,6 +55,9 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    // TODO odkomentowac jak będzie metoda do pobierania
+    //  this.fetchRecipes();
+
     setTimeout(() => {
       this.showRecipes();
     }, 50);
@@ -84,7 +71,6 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
     this.document.documentElement.lang = 'pl';
 
     DomHelper.scrollToTop();
-    this.fetchRecipes();
   }
 
   private showRecipes() {
@@ -117,6 +103,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
       )
       .subscribe(
         (result) => {
+          console.log(result);
           this.recipes = result;
         },
         (error) => {}
@@ -136,7 +123,34 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
   private getRecipesParams = (): HttpParams => {
     let params = new HttpParams();
 
-    // params = this.setFilterRequestParams(params);
+    params = this.setFilterRequestParams(params);
+
+    return params;
+  };
+
+  private setFilterRequestParams = (params: HttpParams): HttpParams => {
+    if (this.filterRefDesktop) {
+      const filter = this.filterRefDesktop.getActiveFilters();
+
+      params.append('title', filter.title);
+
+      if (filter.sort === 'DateDesc') {
+        params.append('orderByDateDesc', 'false');
+        params.append('orderByDateAsc', 'true');
+      } else if (filter.sort === 'DateAsc') {
+        params.append('orderByDateDesc', 'true');
+        params.append('orderByDateAsc', 'false');
+      } else {
+        params.append('orderByDateDesc', 'false');
+        params.append('orderByDateAsc', 'false');
+      }
+
+      if (filter.categoryId != null) {
+        params.append('categoryId', filter.categoryId);
+      } else {
+        params.append('categoryId', '0');
+      }
+    }
 
     return params;
   };
