@@ -32,9 +32,21 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class RatingRecipeGetSerializer(serializers.ModelSerializer):
+    userId = serializers.SerializerMethodField()
+    userName = serializers.SerializerMethodField()
+    content = serializers.CharField(source='commentText')
+    pub_date = serializers.DateTimeField(source='create_date')
+
     class Meta:
         model = Rating
-        fields = ['id', 'author', 'recipe', 'commentText', 'rating', 'create_date']
+        fields = ['userId', 'content', 'rating', 'userName', 'pub_date']
+
+
+    def get_userId(self,obj):
+        return obj.author.id
+
+    def get_userName(self, obj):
+        return obj.author.username
 
 class RecipeFullViewSerializer(serializers.ModelSerializer):
     recipeId = serializers.IntegerField(source='id')
@@ -67,7 +79,7 @@ class RecipeFullViewSerializer(serializers.ModelSerializer):
         return obj.mainImage
 
     def get_authorName(self, obj):
-        return obj.author.name
+        return obj.author.username
 
     def get_authorId(self, obj):
         return obj.author.id
