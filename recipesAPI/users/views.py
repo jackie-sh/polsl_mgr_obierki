@@ -16,13 +16,9 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from users.models import User
 from users.serializers import UserSerializer, LoginSerializer
-
-from django.conf import settings
 from django.contrib import auth
-import jwt
 
 
 class RegisterView(GenericAPIView):
@@ -127,10 +123,6 @@ class UserDetail(APIView):
         return JsonResponse({'isDeleted': True, 'errorMessage': ""}, safe=False,
                             status=status.HTTP_204_NO_CONTENT)
 
-class UserList(APIView):
-    """
-    Create or get user instance.
-    """
 
     def user_exists_by_name(self, name):
         return User.objects.filter(username=name).exists()
