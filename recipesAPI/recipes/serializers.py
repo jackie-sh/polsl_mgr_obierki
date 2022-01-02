@@ -31,10 +31,47 @@ class RecipeSerializer(serializers.ModelSerializer):
         return Recipe.objects.create(**validated_data)
 
 
+class RatingRecipeGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ['id', 'author', 'recipe', 'commentText', 'rating', 'create_date']
+
 class RecipeFullViewSerializer(serializers.ModelSerializer):
+    recipeId = serializers.IntegerField(source='id')
+    views = serializers.IntegerField(source='view_count')
+    createdDate = serializers.DateTimeField(source='create_date')
+    comments = serializers.SerializerMethodField()
+    mainImageId = serializers.SerializerMethodField()
+    categoryId = serializers.SerializerMethodField()
+
+    authorName = serializers.SerializerMethodField()
+    authorId = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
+
     class Meta:
         model = Recipe
-        fields = ['title', 'content', 'authorName', 'recipeId', 'authorId', 'createdDate', 'mainImageId', 'categoryId', 'rating', 'shortDescription', 'views', 'comments']
+        fields = ['authorName', 'authorId', 'recipeId', 'title', 'content', 'categoryId',
+                  'shortDescription',
+                  'createdDate', 'mainImageId', 'views', 'rating', 'comments']
 
+    def get_comments(self, obj):
+        comments = Rating.objects.filter(recipe =obj.id)
+        return RatingRecipeGetSerializer(comments, many=True).data
 
-    #authorName
+    def get_categoryId(self, obj):
+        return obj.category.id
+
+    def get_mainImageId(self, obj):
+        if obj.mainImage:
+            return obj.mainImage.id
+        return obj.mainImage
+
+    def get_authorName(self, obj):
+        return obj.author.name
+
+    def get_authorId(self, obj):
+        return obj.author.id
+
+    def get_rating(self,obj):
+        comments = Rating.objects.filter(recipe=obj.id)
+        return 0
