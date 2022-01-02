@@ -4,7 +4,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse, HttpResponse, Http404
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, serializers
+from rest_framework import status, serializers, permissions
 from rest_framework.decorators import api_view, action
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -77,6 +77,7 @@ class RecipeGetView(GenericAPIView):
             return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
 
 class RecipeCreateView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
 
     @swagger_auto_schema(tags=["recipe"],
@@ -105,6 +106,7 @@ class RecipeCreateView(GenericAPIView):
         return create_response(serializer)
 
 class RecipeEditView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
 
     @swagger_auto_schema(tags=["recipe"],
@@ -134,6 +136,7 @@ class RecipeEditView(GenericAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
 class RecipeDeleteView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
 
     @swagger_auto_schema(tags=["recipe"])
@@ -161,6 +164,7 @@ class RecipeCategoryView(GenericAPIView):
         return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
 class RecipeCreateCommentView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = RatingSerializer
 
     @swagger_auto_schema(tags=["recipe"],
