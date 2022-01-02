@@ -18,15 +18,8 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 from rest_framework import status
 
-def upload_main_image(request, id):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
-
 
 def get_all(request):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
-
-
-def get_image(request, id):
     return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
 
 
@@ -43,24 +36,82 @@ def create_response(serializer):
     data = {'isCreated': False, 'errorMessage': serializer.errors}
     return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
 
+
+class RecipeUploadImage(GenericAPIView):
+    serializer_class = RecipeImageSerializer
+
+    @swagger_auto_schema(tags=["image"],
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={
+                                                            'mainImageId': Schema(type=TYPE_INTEGER),
+                                                            'recipeId': Schema(type=TYPE_INTEGER),
+                                                            'file': Schema(type=TYPE_STRING),
+                                                        })
+                         }
+                         )
+    def post(self, request, pk, format=None):
+        try:
+            recipe = Recipe.objects.get(pk=pk)
+        except Recipe.DoesNotExist:
+            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
+        recipe_serializer = RecipeImageSerializer(recipe, data=request.data, partial=True)
+        try:
+            if recipe_serializer.is_valid(raise_exception=True):
+                recipe_serializer.save()
+                recipe = Recipe.objects.get(pk=pk)
+                serializer_view = RecipeFullViewSerializer(recipe)
+                return JsonResponse(serializer_view.data, safe=False, status=status.HTTP_200_OK)
+        except serializers.ValidationError as valEr:
+            return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecipeGetImage(GenericAPIView):
+    serializer_class = RecipeImageSerializer
+
+    @swagger_auto_schema(tags=["image"],
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={
+                                                            'mainImageId': Schema(type=TYPE_INTEGER),
+                                                            'file': Schema(type=TYPE_STRING),
+                                                        })
+                         }
+                         )
+    def get(self, request, pk, format=None):
+        try:
+            recipe = Recipe.objects.get(pk=pk)
+        except Recipe.DoesNotExist:
+            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
+        recipe_serializer = RecipeImageSerializer(recipe, data=request.data, partial=True)
+        try:
+            if recipe_serializer.is_valid(raise_exception=True):
+                recipe_serializer.save()
+                recipe = Recipe.objects.get(pk=pk)
+                serializer_view = RecipeImageSerializer(recipe)
+                return JsonResponse(serializer_view.data, safe=False, status=status.HTTP_200_OK)
+        except serializers.ValidationError as valEr:
+            return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class RecipeGetView(GenericAPIView):
     serializer_class = RecipeSerializer
 
     @swagger_auto_schema(tags=["recipe"],
-     responses={
-         status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                properties={
-                    'title': Schema(type=TYPE_STRING),
-                    'content': Schema(type=TYPE_STRING),
-                    'authorName': Schema(type=TYPE_STRING),
-                    'recipeId': Schema(type=TYPE_INTEGER),
-                    'authorId': Schema(type=TYPE_INTEGER),
-                    'categoryId': Schema(type=TYPE_INTEGER),
-                    'shortDescription': Schema(type=TYPE_STRING),
-                    'mainImageId': Schema(type=TYPE_INTEGER)
-                })
-         }
-     )
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={
+                                                            'title': Schema(type=TYPE_STRING),
+                                                            'content': Schema(type=TYPE_STRING),
+                                                            'authorName': Schema(type=TYPE_STRING),
+                                                            'recipeId': Schema(type=TYPE_INTEGER),
+                                                            'authorId': Schema(type=TYPE_INTEGER),
+                                                            'categoryId': Schema(type=TYPE_INTEGER),
+                                                            'shortDescription': Schema(type=TYPE_STRING),
+                                                            'mainImageId': Schema(type=TYPE_INTEGER)
+                                                        })
+                         }
+                         )
     def get(self, request, pk, format=None):
         try:
             recipe = Recipe.objects.get(pk=pk)
@@ -76,27 +127,29 @@ class RecipeGetView(GenericAPIView):
         except serializers.ValidationError as valEr:
             return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class RecipeCreateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
 
     @swagger_auto_schema(tags=["recipe"],
-         request_body= Schema(
-            type=TYPE_OBJECT,
-            properties={
-                'title': Schema(type=TYPE_STRING),
-                'content': Schema (type=TYPE_STRING),
-                'categoryId': Schema (type=TYPE_INTEGER),
-                'shortDescription': Schema(type=TYPE_STRING),
-                'mainImageId' : Schema(type=TYPE_INTEGER)
-            }
-        ),
-        responses = {
-            status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                properties={'isCreated': Schema(type=TYPE_BOOLEAN), 'id': Schema(type=TYPE_INTEGER)}
-            )
-        }
-    )
+                         request_body=Schema(
+                             type=TYPE_OBJECT,
+                             properties={
+                                 'title': Schema(type=TYPE_STRING),
+                                 'content': Schema(type=TYPE_STRING),
+                                 'categoryId': Schema(type=TYPE_INTEGER),
+                                 'shortDescription': Schema(type=TYPE_STRING),
+                                 'mainImageId': Schema(type=TYPE_INTEGER)
+                             }
+                         ),
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={'isCreated': Schema(type=TYPE_BOOLEAN),
+                                                                    'id': Schema(type=TYPE_INTEGER)}
+                                                        )
+                         }
+                         )
     def post(self, request):
         data = request.data
         data['category'] = data['categoryId']
@@ -104,6 +157,7 @@ class RecipeCreateView(GenericAPIView):
         data['view_count'] = 0
         serializer = RecipeSerializer(data=data)
         return create_response(serializer)
+
 
 class RecipeEditView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -135,6 +189,7 @@ class RecipeEditView(GenericAPIView):
             return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
                                 status=status.HTTP_400_BAD_REQUEST)
 
+
 class RecipeDeleteView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
@@ -154,14 +209,16 @@ class RecipeDeleteView(GenericAPIView):
         return JsonResponse({'isDeleted': True}, safe=False,
                             status=status.HTTP_404_NOT_FOUND)
 
+
 class RecipeCategoryView(GenericAPIView):
     serializer_class = RecipeCategorySerializer
 
     @swagger_auto_schema(tags=["recipe"])
-    def get(self,request):
+    def get(self, request):
         categories = RecipeCategory.objects.all()
         serializer = RecipeCategorySerializer(categories, many=True)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
+
 
 class RecipeCreateCommentView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]

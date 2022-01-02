@@ -2,16 +2,22 @@ from recipes.models import *
 from rest_framework import serializers
 
 
+class RecipeImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeImage
+        fields = ['id', 'file']
+
+
 class RecipeCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeCategory
         fields = ['id', 'name']
 
+
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['id', 'author', 'recipe', 'commentText', 'rating', 'create_date']
-
 
     def validate_rating(self, value):
         if value > 5 or value < 1:
@@ -22,7 +28,8 @@ class RatingSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ['id', 'author', 'title', 'content', 'shortDescription', 'category', 'mainImage', 'view_count', 'create_date', 'update_date']
+        fields = ['id', 'author', 'title', 'content', 'shortDescription', 'category', 'mainImage', 'view_count',
+                  'create_date', 'update_date']
 
     def validate(self, data):
         return data
@@ -41,12 +48,12 @@ class RatingRecipeGetSerializer(serializers.ModelSerializer):
         model = Rating
         fields = ['userId', 'content', 'rating', 'userName', 'pub_date']
 
-
-    def get_userId(self,obj):
+    def get_userId(self, obj):
         return obj.author.id
 
     def get_userName(self, obj):
         return obj.author.username
+
 
 class RecipeFullViewSerializer(serializers.ModelSerializer):
     recipeId = serializers.IntegerField(source='id')
@@ -67,7 +74,7 @@ class RecipeFullViewSerializer(serializers.ModelSerializer):
                   'createdDate', 'mainImageId', 'views', 'rating', 'comments']
 
     def get_comments(self, obj):
-        comments = Rating.objects.filter(recipe =obj.id)
+        comments = Rating.objects.filter(recipe=obj.id)
         return RatingRecipeGetSerializer(comments, many=True).data
 
     def get_categoryId(self, obj):
@@ -84,6 +91,6 @@ class RecipeFullViewSerializer(serializers.ModelSerializer):
     def get_authorId(self, obj):
         return obj.author.id
 
-    def get_rating(self,obj):
+    def get_rating(self, obj):
         comments = Rating.objects.filter(recipe=obj.id)
         return 0
