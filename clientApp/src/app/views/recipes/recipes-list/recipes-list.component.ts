@@ -38,13 +38,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
 
   noRecipes: boolean;
 
-  public categories: CategoryModel[] = [
-    { id: 1, name: 'Śniadanie' },
-    { id: 2, name: 'Obiad' },
-    { id: 3, name: 'Deser' },
-    { id: 4, name: 'Podwieczorek' },
-    { id: 5, name: 'Kolacja' },
-  ];
+  public categories: CategoryModel[] = [];
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -105,6 +99,24 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
         (result) => {
           console.log(result);
           this.recipes = result;
+        },
+        (error) => {}
+      );
+
+    this.loaderService.show();
+
+    this.recipesService
+      .getRecipeCategories()
+      .pipe(
+        finalize(() => {
+          this.loaderService.hide();
+        })
+      )
+      .subscribe(
+        (result) => {
+          if (result) {
+            this.categories = result;
+          }
         },
         (error) => {}
       );

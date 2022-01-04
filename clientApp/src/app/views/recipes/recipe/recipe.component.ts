@@ -40,13 +40,7 @@ export class RecipeComponent implements OnInit {
 
   isCommentFormInvalid: boolean;
 
-  public categories: CategoryModel[] = [
-    { id: 1, name: 'Śniadanie' },
-    { id: 2, name: 'Obiad' },
-    { id: 3, name: 'Deser' },
-    { id: 4, name: 'Podwieczorek' },
-    { id: 5, name: 'Kolacja' },
-  ];
+  public categories: CategoryModel[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -127,6 +121,24 @@ export class RecipeComponent implements OnInit {
           this.recipeContainer.nativeElement.innerHTML = result.content;
 
           this.setRecipeMainImg(+this.recipe.mainImageId);
+        },
+        (error) => {}
+      );
+
+    this.loaderService.show();
+
+    this.recipesService
+      .getRecipeCategories()
+      .pipe(
+        finalize(() => {
+          this.loaderService.hide();
+        })
+      )
+      .subscribe(
+        (result) => {
+          if (result) {
+            this.categories = result;
+          }
         },
         (error) => {}
       );

@@ -46,13 +46,7 @@ export class CreateRecipeComponent implements OnInit {
 
   private recipeSubscription: Subscription;
 
-  public categories: CategoryModel[] = [
-    { id: 1, name: 'Śniadanie' },
-    { id: 2, name: 'Obiad' },
-    { id: 3, name: 'Deser' },
-    { id: 4, name: 'Podwieczorek' },
-    { id: 5, name: 'Kolacja' },
-  ];
+  public categories: CategoryModel[] = [];
 
   constructor(
     private location: Location,
@@ -75,6 +69,28 @@ export class CreateRecipeComponent implements OnInit {
         this.initAddRecipe();
       }
     });
+
+    this.fetchCategories();
+  }
+
+  private fetchCategories = (): void => {   
+    this.loaderService.show();
+
+    this.recipesService
+      .getRecipeCategories()
+      .pipe(
+        finalize(() => {
+          this.loaderService.hide();
+        })
+      )
+      .subscribe(
+        (result) => {
+          if (result) {
+            this.categories = result;
+          }
+        },
+        (error) => {}
+      );
   }
 
   private initAddRecipe = (): void => {
@@ -107,6 +123,7 @@ export class CreateRecipeComponent implements OnInit {
         },
         (error) => {}
       );
+
   };
 
   private setRecipeEdit = (

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { CategoryModel } from 'src/app/infrastructure/models/category.model';
+import { RecipesService } from 'src/app/infrastructure/services/recipes.service';
 
 declare var $: any;
 
@@ -12,13 +14,7 @@ declare var $: any;
 export class RecipesFilterComponent implements OnInit {
   @Output() onFilterFormSubmit: EventEmitter<void> = new EventEmitter<void>();
 
-  public categories: CategoryModel[] = [
-    { id: 1, name: 'Śniadanie' },
-    { id: 2, name: 'Obiad' },
-    { id: 3, name: 'Deser' },
-    { id: 4, name: 'Podwieczorek' },
-    { id: 5, name: 'Kolacja' },
-  ];
+  public categories: CategoryModel[] = [];
 
   filterForm: FormGroup;
 
@@ -36,7 +32,7 @@ export class RecipesFilterComponent implements OnInit {
 
   filterOpenedFlag: boolean = false;
 
-  constructor() {}
+  constructor(private recipesService: RecipesService) {}
 
   ngOnInit(): void {
     this.init();
@@ -44,7 +40,25 @@ export class RecipesFilterComponent implements OnInit {
 
   private init = (): void => {
     this.initForm();
+    this.fetchCategories();
   };
+
+  private fetchCategories = (): void => {
+    this.recipesService
+      .getRecipeCategories()
+      .pipe(
+        finalize(() => {
+        })
+      )
+      .subscribe(
+        (result) => {
+          if (result) {
+            this.categories = result;
+          }
+        },
+        (error) => {}
+      );
+  }
 
   private initForm = (): void => {
     let controls = {};

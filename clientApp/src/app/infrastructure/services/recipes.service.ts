@@ -12,6 +12,7 @@ import { CreateCommentModel } from 'src/app/infrastructure/models/create-comment
 import { RecipeMainPageItemModel } from 'src/app/infrastructure/models/recipe-main-page-item.model';
 import { EditRecipeModel } from 'src/app/infrastructure/models/edit-recipe.model';
 import { GetRecipeModel } from 'src/app/infrastructure/models/get-recipe.model';
+import { CategoryModel } from '../models/category.model';
 
 declare var tinyMCE: any;
 
@@ -74,6 +75,13 @@ export class RecipesService {
     return this.http.get<RecipeListModel>(`${this.baseApiUrl}/all-recipes`, {
       params: params,
     });
+  };
+
+  getRecipeCategories = (): Observable<CategoryModel[]> => {
+    return this.http.get<CategoryModel[]>(
+      `${this.baseApiUrl}/recipes/get-categories`,
+      {}
+    );
   };
 
   getAllRecipes = (
