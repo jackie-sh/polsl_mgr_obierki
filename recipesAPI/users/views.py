@@ -123,6 +123,10 @@ class UserDetail(APIView):
         return JsonResponse({'isDeleted': True, 'errorMessage': ""}, safe=False,
                             status=status.HTTP_204_NO_CONTENT)
 
+class UserList(APIView):
+    """
+    Create or get user instance.
+    """
 
     def user_exists_by_name(self, name):
         return User.objects.filter(username=name).exists()

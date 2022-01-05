@@ -41,13 +41,18 @@ class RecipeUploadImage(GenericAPIView):
     serializer_class = RecipeImageSerializer
 
     @swagger_auto_schema(tags=["image"],
+                         request_body=Schema(
+                             type=TYPE_OBJECT,
+                             properties={
+                                 'recipeId': Schema(type=TYPE_INTEGER),
+                                 'file': Schema(type=TYPE_STRING),
+                             }
+                         ),
                          responses={
                              status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                                                        properties={
-                                                            'mainImageId': Schema(type=TYPE_INTEGER),
-                                                            'recipeId': Schema(type=TYPE_INTEGER),
-                                                            'file': Schema(type=TYPE_STRING),
-                                                        })
+                                                        properties={'isCreated': Schema(type=TYPE_BOOLEAN),
+                                                                    'imageId': Schema(type=TYPE_INTEGER)}
+                                                        )
                          }
                          )
     def post(self, request, pk, format=None):
