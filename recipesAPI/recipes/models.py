@@ -3,7 +3,7 @@ from users.models import User
 
 
 class RecipeImage(models.Model):
-    file = models.ImageField(blank=False, null=False)  # TODO until file upload complete this is true
+    file = models.ImageField(blank=True)
 
     def __str__(self):
         return self.file.name
@@ -19,8 +19,7 @@ class Recipe(models.Model):
     content = models.CharField(max_length=1000, default="")
     shortDescription = models.CharField(max_length=100, default="")
     category = models.ForeignKey(RecipeCategory, on_delete=models.PROTECT)
-    mainImage = models.ForeignKey(RecipeImage, on_delete=models.CASCADE)
-
+    mainImage = models.ForeignKey(RecipeImage, null=True, on_delete=models.PROTECT)
     view_count = models.IntegerField()
     create_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)

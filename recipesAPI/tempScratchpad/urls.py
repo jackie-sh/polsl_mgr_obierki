@@ -6,7 +6,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from tempScratchpad import views
 
 urlpatterns = [
-    url(r'^api/recipes/upload-main-image', views.SaveFile),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)
