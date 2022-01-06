@@ -1,26 +1,22 @@
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse, HttpResponse, Http404
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status, serializers, permissions
-from rest_framework.decorators import api_view, action
+from rest_framework import permissions
 from rest_framework.generics import GenericAPIView
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .models import Recipe, RecipeCategory
+from rest_framework.parsers import FileUploadParser
+from .models import Recipe, RecipeCategory, RecipeImage
 from .serializers import *
-from .models import Message
 from django.http import HttpResponse, JsonResponse
-
-# Create your views here.
+from django.core import serializers
 from rest_framework import status
 
 
 def get_all(request):
-    return JsonResponse({'temp': 'Mocked'}, status=status.HTTP_200_OK)
+    recipes = Recipe.objects.all()
+    data = serializers.serialize('json', recipes)
+    return HttpResponse(data, content_type='application/json')
 
 
 def create_comment(request, id):
@@ -39,6 +35,7 @@ def create_response(serializer):
 
 class RecipeUploadImage(GenericAPIView):
     serializer_class = RecipeImageSerializer
+    parser_class = [FileUploadParser]
 
     @swagger_auto_schema(tags=["image"],
                          request_body=Schema(
@@ -55,18 +52,12 @@ class RecipeUploadImage(GenericAPIView):
                                                         )
                          }
                          )
-    def post(self, request, pk, format=None):
-        try:
-            recipe = Recipe.objects.get(pk=pk)
-        except Recipe.DoesNotExist:
-            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
-        recipe_serializer = RecipeImageSerializer(recipe, data=request.data, partial=True)
+    def post(self, request):
+        recipe_serializer = RecipeImageSerializer(data=request.data)
         try:
             if recipe_serializer.is_valid(raise_exception=True):
                 recipe_serializer.save()
-                recipe = Recipe.objects.get(pk=pk)
-                serializer_view = RecipeFullViewSerializer(recipe)
-                return JsonResponse(serializer_view.data, safe=False, status=status.HTTP_200_OK)
+                return JsonResponse(recipe_serializer.data, safe=False, status=status.HTTP_200_OK)
         except serializers.ValidationError as valEr:
             return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -83,20 +74,15 @@ class RecipeGetImage(GenericAPIView):
                                                         })
                          }
                          )
-    def get(self, request, pk, format=None):
+    def get(self, request, pk):
         try:
             recipe = Recipe.objects.get(pk=pk)
+            recipeImageId = recipe.mainImage.id
+            recipeImage = RecipeImage.objects.get(pk=recipeImageId)
         except Recipe.DoesNotExist:
             return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
-        recipe_serializer = RecipeImageSerializer(recipe, data=request.data, partial=True)
-        try:
-            if recipe_serializer.is_valid(raise_exception=True):
-                recipe_serializer.save()
-                recipe = Recipe.objects.get(pk=pk)
-                serializer_view = RecipeImageSerializer(recipe)
-                return JsonResponse(serializer_view.data, safe=False, status=status.HTTP_200_OK)
-        except serializers.ValidationError as valEr:
-            return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
+        recipeImageSerializer = RecipeImageSerializer(recipeImage)
+        return JsonResponse(recipeImageSerializer.data, safe=False, status=status.HTTP_200_OK)
 
 
 class RecipeGetView(GenericAPIView):
@@ -111,13 +97,13 @@ class RecipeGetView(GenericAPIView):
                                                             'authorName': Schema(type=TYPE_STRING),
                                                             'recipeId': Schema(type=TYPE_INTEGER),
                                                             'authorId': Schema(type=TYPE_INTEGER),
+                                                            'imageId': Schema(type=TYPE_INTEGER),
                                                             'categoryId': Schema(type=TYPE_INTEGER),
                                                             'shortDescription': Schema(type=TYPE_STRING),
-                                                            'mainImageId': Schema(type=TYPE_INTEGER)
                                                         })
                          }
                          )
-    def get(self, request, pk, format=None):
+    def get(self, request, pk):
         try:
             recipe = Recipe.objects.get(pk=pk)
         except Recipe.DoesNotExist:
@@ -176,10 +162,9 @@ class RecipeEditView(GenericAPIView):
                                  'content': Schema(type=TYPE_STRING),
                                  'categoryId': Schema(type=TYPE_INTEGER),
                                  'shortDescription': Schema(type=TYPE_STRING),
-                                 'mainImageId': Schema(type=TYPE_INTEGER)
                              }
                          ))
-    def put(self, request, pk, format=None):
+    def put(self, request, pk):
         try:
             recipe = Recipe.objects.get(pk=pk)
         except Recipe.DoesNotExist:
@@ -189,7 +174,7 @@ class RecipeEditView(GenericAPIView):
         try:
             if recipe_serializer.is_valid(raise_exception=True):
                 recipe_serializer.save()
-                return JsonResponse({'isUpdated': True, 'errorMessage': ""}, status=status.HTTP_200_OK)
+                return JsonResponse({'isUpdated': True}, status=status.HTTP_200_OK)
         except serializers.ValidationError as valEr:
             return JsonResponse({'isUpdated': False, 'errorMessage': valEr.detail}, safe=False,
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -200,7 +185,7 @@ class RecipeDeleteView(GenericAPIView):
     serializer_class = RecipeSerializer
 
     @swagger_auto_schema(tags=["recipe"])
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk):
         try:
             recipe = Recipe.objects.get(pk=pk)
         except Recipe.DoesNotExist:
@@ -238,7 +223,7 @@ class RecipeCreateCommentView(GenericAPIView):
                                  'rating': Schema(type=TYPE_INTEGER)
                              }
                          ))
-    def post(self, request, format=None):
+    def post(self, request):
         try:
             recipe = Recipe.objects.get(pk=request.data['recipeId'])
         except Recipe.DoesNotExist:

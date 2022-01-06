@@ -6,7 +6,7 @@ from recipes import views
 urlpatterns = [
     path('get-recipe/<int:pk>', views.RecipeGetView.as_view(http_method_names=['get'])),
     path('create-recipe', views.RecipeCreateView.as_view(http_method_names=['post'])),
-    path('upload-main-image/<int:pk>', views.RecipeUploadImage.as_view(http_method_names=['post'])),
+    path('upload-main-image', views.RecipeUploadImage.as_view(http_method_names=['post'])),
     path('edit-recipe/<int:pk>',  views.RecipeEditView.as_view(http_method_names=['put'])),
     path('delete-recipe/<int:pk>', views.RecipeDeleteView.as_view(http_method_names=['delete'])),
     path('get-all', views.get_all),

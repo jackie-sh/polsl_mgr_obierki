@@ -1,3 +1,5 @@
+import logging
+
 from recipes.models import *
 from rest_framework import serializers
 
@@ -62,7 +64,6 @@ class RecipeFullViewSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     mainImageId = serializers.SerializerMethodField()
     categoryId = serializers.SerializerMethodField()
-
     authorName = serializers.SerializerMethodField()
     authorId = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
