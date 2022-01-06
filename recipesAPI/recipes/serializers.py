@@ -1,5 +1,3 @@
-import logging
-
 from recipes.models import *
 from rest_framework import serializers
 
