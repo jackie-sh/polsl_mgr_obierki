@@ -22,6 +22,8 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { NgChatModule } from 'ng-chat';
 import { RecipeComponent } from './views/recipes/recipe/recipe.component';
 import { UserProfileComponent } from './views/user/user-profile/user-profile.component';
+import { Error404Component } from './views/errors/error404/error404.component';
+import { Error500Component } from './views/errors/error500/error500.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { UserProfileComponent } from './views/user/user-profile/user-profile.com
     RecipesFilterComponent,
     RecipeComponent,
     UserProfileComponent,
+    Error404Component,
+    Error500Component,
   ],
   imports: [
     BrowserModule,
