@@ -18,33 +18,6 @@ def get_all(request):
     return HttpResponse(data, content_type='application/json')
 
 
-class RecipeCreateComment(GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = RecipeCategorySerializer
-
-    @swagger_auto_schema(tags=["recipe"],
-                         request_body=Schema(
-                             type=TYPE_OBJECT,
-                             properties={
-                                 'recipeId': Schema(type=TYPE_STRING),
-                                 'commentText': Schema(type=TYPE_STRING),
-                                 'rating': Schema(type=TYPE_INTEGER)
-                             }
-                         ),
-                         responses={
-                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                                                        properties={'isCreated': Schema(type=TYPE_BOOLEAN)}
-                                                        )
-                         }
-                         )
-    def post(self, request):
-        data = request.data
-        data['recipe'] = data['recipeId']
-        data['author'] = request.user.id
-        serializer = RecipeCategorySerializer(data=data)
-        return create_response(serializer)
-
-
 def create_response(serializer):
     if serializer.is_valid():
         serializer.save()
@@ -249,17 +222,18 @@ class RecipeCreateCommentView(GenericAPIView):
                          request_body=Schema(
                              type=TYPE_OBJECT,
                              properties={
-                                 'recipeId': Schema(type=TYPE_INTEGER),
+                                 'recipeId': Schema(type=TYPE_STRING),
                                  'commentText': Schema(type=TYPE_STRING),
                                  'rating': Schema(type=TYPE_INTEGER)
                              }
-                         ))
+                         ),
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={'isCreated': Schema(type=TYPE_BOOLEAN)}
+                                                        )
+                         }
+                         )
     def post(self, request):
-        try:
-            recipe = Recipe.objects.get(pk=request.data['recipeId'])
-        except Recipe.DoesNotExist:
-            return JsonResponse({'isDeleted': False, 'errorMessage': "Recipe does not exist"}, safe=False,
-                                status=status.HTTP_404_NOT_FOUND)
         data = request.data
         data['recipe'] = data['recipeId']
         data['author'] = request.user.id
