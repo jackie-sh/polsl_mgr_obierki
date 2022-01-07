@@ -59,34 +59,6 @@ export class RecipeComponent implements OnInit {
     window.scrollTo(0, 0);
     this.recipe = new GetRecipeModel();
 
-    //TODO do wywalenia jak będą endpointy
-    this.recipe.title = 'Testowy tytuł artykułu';
-    this.recipe.content =
-      ' <h1>Headings</h1><h2>are</h2><h3>great</h3><h4>for</h4><h5>titles</h5><h6>and subtitles</h6>';
-    this.recipe.authorName = 'Pawel123';
-    this.recipe.mainImageId = 2;
-    this.recipe.recipeId = 3;
-    this.recipe.authorId = 3;
-    this.recipe.createdDate = new Date();
-    this.recipe.categoryId = 2;
-    this.recipe.rating = 4.6;
-    this.recipe.shortDescription = 'Jakiś krótki opis artykułu o czym on jest';
-    this.recipe.views = 100;
-    this.recipe.comments = [
-      {
-        userId: '10',
-        content: 'Fajny przepis :))))))))))))))))))))))',
-        rating: 5,
-        userName: 'Pawel132',
-      },
-      {
-        userId: '20',
-        content: 'Nie podoba mi sie',
-        rating: 2,
-        userName: 'Aasfksofj',
-      },
-    ];
-
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -109,9 +81,6 @@ export class RecipeComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.loaderService.hide();
-
-          //TODO do wywalenia
-          this.recipeContainer.nativeElement.innerHTML = this.recipe.content;
         })
       )
       .subscribe(
@@ -120,7 +89,7 @@ export class RecipeComponent implements OnInit {
 
           this.recipeContainer.nativeElement.innerHTML = result.content;
 
-          this.setRecipeMainImg(+this.recipe.mainImageId);
+          this.setRecipeMainImg(+this.recipe.recipeId);
         },
         (error) => {}
       );
@@ -151,7 +120,7 @@ export class RecipeComponent implements OnInit {
 
     return this.categories.filter(function (item) {
       return item.id === id;
-    })[0].name;
+    })[0]?.name;
   }
 
   private setRecipeMainImg = (id: number): void => {
@@ -165,7 +134,9 @@ export class RecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          this.setMainImgSrc(result.body);
+          console.log(result);
+          this.mainImageSrc = 'http://localhost:8000' + result.file;
+          //this.setMainImgSrc(result.body);
         },
         (error) => {}
       );

@@ -28,9 +28,9 @@ export class RecipesService {
     private readonly http: HttpClient
   ) {}
 
-  getRecipeForUpdate = (id: string): Observable<CreateRecipeModel> => {
-    return this.http.get<CreateRecipeModel>(
-      `${this.baseApiUrl}/recipe-edit/${id}`
+  getRecipeForUpdate = (id: string): Observable<EditRecipeModel> => {
+    return this.http.get<EditRecipeModel>(
+      `${this.baseApiUrl}/recipes/get-recipe/${id}`
     );
   };
 
@@ -41,9 +41,9 @@ export class RecipesService {
     );
   };
 
-  putRecipe = (model: EditRecipeModel): Observable<Response> => {
+  putRecipe = (model: EditRecipeModel, id: number): Observable<Response> => {
     return this.http.put<Response>(
-      `${this.baseApiUrl}/recipes/edit-recipe`,
+      `${this.baseApiUrl}/recipes/edit-recipe/${id}`,
       model
     );
   };

@@ -77,43 +77,66 @@
                   </div>
                 </div>
 
-                <div class="form-outline mb-4">
-                  <div
-                    class="dropzone"
-                    tabindex="0"
-                    [class.light-gray-background]="isDragging"
-                    draggable="true"
-                  >
-                    <div class="selectFile">
-                      <div class="justify-content-center row">
-                        <div id="fileBtn" class="file btn btn-green">
-                          WYBIERZ PLIK LUB PRZECIĄGNIJ GO TUTAJ
-                          <input
-                            id="fileDropRef"
-                            formControlName="mainImg"
-                            class="dragDropInput form-control"
-                            type="file"
-                            name="file"
-                            accept=".jpg,.jpeg,.png,.bmp"
-                            tabindex="0"
-                            (dragenter)="onDragEnter($event)"
-                            (dragleave)="onDragLeave($event)"
-                            (change)="onMainImageSelected($event)"
-                          />
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="form-outline mb-4">
+                      <div
+                        class="dropzone"
+                        tabindex="0"
+                        [class.light-gray-background]="isDragging"
+                        draggable="true"
+                      >
+                        <div class="selectFile">
+                          <div class="justify-content-center row">
+                            <div id="fileBtn" class="file btn btn-green">
+                              WYBIERZ PLIK LUB PRZECIĄGNIJ GO TUTAJ
+                              <input
+                                id="fileDropRef"
+                                formControlName="mainImg"
+                                class="dragDropInput form-control"
+                                type="file"
+                                name="file"
+                                accept=".jpg,.jpeg,.png,.bmp"
+                                tabindex="0"
+                                (dragenter)="onDragEnter($event)"
+                                (dragleave)="onDragLeave($event)"
+                                (change)="onMainImageSelected($event)"
+                              />
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <label for="fileDropRef">
+                        Wybierz obraz główny
+                        <span class="required"></span>
+                      </label>
+                      <div *ngIf="isMainImageInvalid">
+                        <span class="red-text">Pole jest wymagane.</span>
                       </div>
                     </div>
                   </div>
-                  <label for="fileDropRef">
-                    Obraz główny
-                    <span class="required"></span>
-                  </label>
-                  <div *ngIf="isMainImageInvalid">
-                    <span class="red-text">Pole jest wymagane.</span>
+                  <div class="col-md-4">
+                    <div class="form-outline" *ngIf="imageSrc != '#'">
+                      <img
+                        tabindex="0"
+                        [src]="imageSrc"
+                        class="img-fluid"
+                        style="height: 115px"
+                      />
+                    </div>
+                    <div class="form-outline" *ngIf="imageSrc == '#'">
+                      <img
+                        tabindex="0"
+                        src="https://png.pngtree.com/png-vector/20190820/ourmid/pngtree-no-image-vector-illustration-isolated-png-image_1694547.jpg"
+                        class="img-fluid"
+                        style="height: 115px"
+                      />
+                    </div>
+                    <label for="fileDropRef">
+                      Aktualny obraz
+                      <span class="required"></span>
+                    </label>
                   </div>
-                </div>
-                <div class="form-outline" *ngIf="imageSrc != '#'">
-                  <img tabindex="0" [src]="imageSrc" class="img-fluid" />
                 </div>
                 <div class="form-outline mb-4">
                   <editor

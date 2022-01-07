@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
+import { RecipeFileUploadModel } from '../models/RecipeFileUpload.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,18 +12,10 @@ export class FilesService {
     private readonly http: HttpClient
   ) {}
 
-  getFileById = (id: number): Observable<HttpResponse<Blob>> => {
-    return this.http.get(`${this.baseApiUrl}/files/${id}/`, {
-      responseType: 'blob',
-      observe: 'response',
-    });
-  };
-
-  // ??????????????????? TODO co będzie z backendu zwracane ?
-  getMainImageForRecipe = (id: number): Observable<HttpResponse<Blob>> => {
-    return this.http.get(`${this.baseApiUrl}/recipes/get-image/${id}`, {
-      responseType: 'blob',
-      observe: 'response',
-    });
+  getFileById = (id: number): Observable<RecipeFileUploadModel> => {
+    return this.http.get<RecipeFileUploadModel>(
+      `${this.baseApiUrl}/recipes/get-image/${id}`,
+      {}
+    );
   };
 }

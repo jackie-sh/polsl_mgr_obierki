@@ -179,7 +179,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
           .pipe(finalize(() => {}))
           .subscribe(
             (result) => {
-              this.setMainImgSrc(x, result.body);
+              //  this.setMainImgSrc(x, result.body);
             },
             (error) => {}
           );
