@@ -1,3 +1,5 @@
+from django.db.models import Avg
+
 from recipes.models import *
 from rest_framework import serializers
 
@@ -91,5 +93,5 @@ class RecipeFullViewSerializer(serializers.ModelSerializer):
         return obj.author.id
 
     def get_rating(self, obj):
-        comments = Rating.objects.filter(recipe=obj.id)
-        return 0
+        rec_ratings = Rating.objects.filter(recipe=obj.id)
+        return rec_ratings.aggregate(Avg('rating'))['rating__avg']
