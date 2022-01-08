@@ -1,5 +1,4 @@
 from distutils.util import strtobool
-
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
@@ -256,29 +255,6 @@ class RecipeCreateCommentView(GenericAPIView):
         return create_response(serializer)
 
 
-class RecipeGetImage(GenericAPIView):
-    serializer_class = RecipeImageSerializer
-
-    @swagger_auto_schema(tags=["image"],
-                         responses={
-                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                                                        properties={
-                                                            'mainImageId': Schema(type=TYPE_INTEGER),
-                                                            'file': Schema(type=TYPE_STRING),
-                                                        })
-                         }
-                         )
-    def get(self, request, pk):
-        try:
-            recipe = Recipe.objects.get(pk=pk)
-            recipeImageId = recipe.mainImage.id
-            recipeImage = RecipeImage.objects.get(pk=recipeImageId)
-        except Recipe.DoesNotExist:
-            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
-        recipeImageSerializer = RecipeImageSerializer(recipeImage)
-        return JsonResponse(recipeImageSerializer.data, safe=False, status=status.HTTP_200_OK)
-
-
 class RecipeGetImageByImageId(GenericAPIView):
     serializer_class = RecipeImageSerializer
 
@@ -297,3 +273,4 @@ class RecipeGetImageByImageId(GenericAPIView):
             return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
         recipeImageSerializer = RecipeImageSerializer(recipeImage)
         return JsonResponse(recipeImageSerializer.data['file'], safe=False, status=status.HTTP_200_OK)
+
