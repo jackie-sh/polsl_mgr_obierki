@@ -1,3 +1,6 @@
+from itertools import chain
+
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
@@ -18,8 +21,10 @@ class ViewMessagesView(GenericAPIView):
                              Parameter('toUserId', IN_QUERY, type='integer'),
                          ])
     def get(self, request):
+        user_id = request.user.id
         target_id = int(request.GET['toUserId'])
-        messages = request.user.messages_sent.filter(to_user=target_id)
+        search = (Q(from_user=user_id) & Q(to_user=target_id)) | (Q(from_user=target_id) & Q(to_user=user_id))
+        messages = Message.objects.filter(search)
         messages_serializer = MessageSerializerGet(messages, many=True)
         return JsonResponse(messages_serializer.data, safe=False, status=status.HTTP_200_OK)
 
