@@ -1,4 +1,4 @@
 export class RecipeFileUploadModel {
-    id: string;
-  }
-  
+  id: string;
+  file: string;
+}

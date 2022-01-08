@@ -134,7 +134,7 @@ export class MyProfileComponent implements OnInit {
           .pipe(finalize(() => {}))
           .subscribe(
             (result) => {
-              this.setMainImgSrc(x, result.body);
+              // this.setMainImgSrc(x, result.body);
             },
             (error) => {}
           );

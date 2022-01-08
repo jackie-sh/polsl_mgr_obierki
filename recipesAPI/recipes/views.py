@@ -52,29 +52,6 @@ class RecipeUploadImage(GenericAPIView):
         return create_response(serializer)
 
 
-class RecipeGetImage(GenericAPIView):
-    serializer_class = RecipeImageSerializer
-
-    @swagger_auto_schema(tags=["image"],
-                         responses={
-                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
-                                                        properties={
-                                                            'mainImageId': Schema(type=TYPE_INTEGER),
-                                                            'file': Schema(type=TYPE_STRING),
-                                                        })
-                         }
-                         )
-    def get(self, request, pk):
-        try:
-            recipe = Recipe.objects.get(pk=pk)
-            recipeImageId = recipe.mainImage.id
-            recipeImage = RecipeImage.objects.get(pk=recipeImageId)
-        except Recipe.DoesNotExist:
-            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
-        recipeImageSerializer = RecipeImageSerializer(recipeImage)
-        return JsonResponse(recipeImageSerializer.data, safe=False, status=status.HTTP_200_OK)
-
-
 class RecipeGetView(GenericAPIView):
     serializer_class = RecipeSerializer
 
@@ -273,3 +250,46 @@ class RecipeCreateCommentView(GenericAPIView):
         data['author'] = request.user.id
         serializer = RatingSerializer(data=data)
         return create_response(serializer)
+
+
+class RecipeGetImage(GenericAPIView):
+    serializer_class = RecipeImageSerializer
+
+    @swagger_auto_schema(tags=["image"],
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={
+                                                            'mainImageId': Schema(type=TYPE_INTEGER),
+                                                            'file': Schema(type=TYPE_STRING),
+                                                        })
+                         }
+                         )
+    def get(self, request, pk):
+        try:
+            recipe = Recipe.objects.get(pk=pk)
+            recipeImageId = recipe.mainImage.id
+            recipeImage = RecipeImage.objects.get(pk=recipeImageId)
+        except Recipe.DoesNotExist:
+            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
+        recipeImageSerializer = RecipeImageSerializer(recipeImage)
+        return JsonResponse(recipeImageSerializer.data, safe=False, status=status.HTTP_200_OK)
+
+
+class RecipeGetImageByImageId(GenericAPIView):
+    serializer_class = RecipeImageSerializer
+
+    @swagger_auto_schema(tags=["image"],
+                         responses={
+                             status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
+                                                        properties={
+                                                            'file': Schema(type=TYPE_STRING),
+                                                        })
+                         }
+                         )
+    def get(self, request, pk):
+        try:
+            recipeImage = RecipeImage.objects.get(pk=pk)
+        except Recipe.DoesNotExist:
+            return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
+        recipeImageSerializer = RecipeImageSerializer(recipeImage)
+        return JsonResponse(recipeImageSerializer.data['file'], safe=False, status=status.HTTP_200_OK)

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, Route } from '@angular/router';
 import { AboutComponent } from './views/about/about.component';
+import { Error404Component } from './views/errors/error404/error404.component';
+import { Error500Component } from './views/errors/error500/error500.component';
 import { HomeComponent } from './views/home/home.component';
 import { CreateRecipeComponent } from './views/recipes/create-recipe/create-recipe.component';
 import { RecipeComponent } from './views/recipes/recipe/recipe.component';
@@ -68,6 +70,20 @@ const routes: Route[] = [
     component: CreateRecipeComponent,
     data: {
       title: 'Edytuj przepis',
+    },
+  },
+  {
+    path: '404',
+    component: Error404Component,
+    data: {
+      title: '404',
+    },
+  },
+  {
+    path: '500',
+    component: Error500Component,
+    data: {
+      title: '500',
     },
   },
   {

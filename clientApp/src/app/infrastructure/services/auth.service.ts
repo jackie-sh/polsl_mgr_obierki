@@ -97,6 +97,8 @@ export class AuthService {
     //  localStorage.setItem(USERNAME_LOGIN, decodetdTokenAccess.username);
 
     let expirationDate = new Date(decodetdTokenAccess.exp * 1000);
+    console.log('setlocalstorage');
+    console.log(expirationDate);
 
     localStorage.setItem(EXPIRATION_DATE_NAME, expirationDate.toString()); // token exporation date
     localStorage.setItem(
@@ -159,6 +161,7 @@ export class AuthService {
   };
 
   private countInterval = (expirationDate: Moment): number => {
+    console.log(expirationDate);
     const nowTime = moment();
     if (expirationDate.isBefore(nowTime))
       throw new Error('The expiration date is past');
@@ -185,8 +188,8 @@ export class AuthService {
             this.updateTokenValues(res);
             pipe(res);
             this.tokenSubscriber.next(res.token);
-          },
-          () => this.logOut()
+          }
+          // () => this.logOut() //TODO!
         );
     }
   };

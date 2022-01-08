@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { CreateRecipeModel } from 'src/app/infrastructure/models/createRecipe.model';
 import { LoaderService } from 'src/app/infrastructure/services/loader.service';
 import { RecipesService } from 'src/app/infrastructure/services/recipes.service';
@@ -13,6 +13,7 @@ import { Location } from '@angular/common';
 import { DomHelper } from 'src/app/infrastructure/helpers/dom-helper';
 import { CategoryModel } from 'src/app/infrastructure/models/category.model';
 import { EditRecipeModel } from 'src/app/infrastructure/models/edit-recipe.model';
+import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 
 @Component({
   selector: 'app-create-recipe',
@@ -29,6 +30,8 @@ export class CreateRecipeComponent implements OnInit {
   recipeForm: FormGroup;
 
   recipe: CreateRecipeModel;
+
+  editRecipe: EditRecipeModel;
 
   isRecipeFormInvalid: boolean = false;
 
@@ -73,7 +76,7 @@ export class CreateRecipeComponent implements OnInit {
     this.fetchCategories();
   }
 
-  private fetchCategories = (): void => {   
+  private fetchCategories = (): void => {
     this.loaderService.show();
 
     this.recipesService
@@ -91,7 +94,7 @@ export class CreateRecipeComponent implements OnInit {
         },
         (error) => {}
       );
-  }
+  };
 
   private initAddRecipe = (): void => {
     this.recipe = new CreateRecipeModel();
@@ -99,6 +102,7 @@ export class CreateRecipeComponent implements OnInit {
   };
 
   private initEditRecipe = (id: string): void => {
+    this.editRecipe = new EditRecipeModel();
     this.isEdit = true;
     this.headerTitle = 'Edytuj przepis';
     this.fetchData(id);
@@ -123,19 +127,15 @@ export class CreateRecipeComponent implements OnInit {
         },
         (error) => {}
       );
-
   };
 
-  private setRecipeEdit = (
-    id: string,
-    updateModel: CreateRecipeModel
-  ): void => {
-    this.recipe = new CreateRecipeModel();
-    this.recipe.id = parseInt(id);
-    this.recipe.content = updateModel.content;
-    this.recipe.title = updateModel.title;
-    this.recipe.mainImageId = updateModel.mainImageId;
-    this.setRecipeMainImg(this.recipe.mainImageId);
+  private setRecipeEdit = (id: string, updateModel: EditRecipeModel): void => {
+    this.editRecipe = new EditRecipeModel();
+    this.editRecipe.content = updateModel.content;
+    this.editRecipe.title = updateModel.title;
+    this.editRecipe.shortDescription = updateModel.shortDescription;
+    this.editRecipe.mainImageId = updateModel.mainImageId;
+    this.setRecipeMainImg(+this.recipeId);
   };
 
   private setRecipeMainImg = (id: number): void => {
@@ -149,7 +149,9 @@ export class CreateRecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          this.setMainImgSrc(result.body);
+          console.log(result);
+          this.imageSrc = 'http://localhost:8000' + result.file;
+          // this.setMainImgSrc(result.file);
         },
         (error) => {}
       );
@@ -159,28 +161,32 @@ export class CreateRecipeComponent implements OnInit {
     let controls = {};
 
     controls['title'] = new FormControl(
-      this.recipe && this.recipe.title ? this.recipe.title : '',
+      this.editRecipe && this.editRecipe.title ? this.editRecipe.title : '',
       Validators.required
     );
 
     controls['categoryId'] = new FormControl(
-      this.recipe && this.recipe.categoryId ? this.recipe.categoryId : '1',
+      this.editRecipe && this.editRecipe.categoryId
+        ? this.editRecipe.categoryId
+        : '1',
       Validators.required
     );
 
     controls['shortDescription'] = new FormControl(
-      this.recipe && this.recipe.shortDescription
-        ? this.recipe.shortDescription
+      this.editRecipe && this.editRecipe.shortDescription
+        ? this.editRecipe.shortDescription
         : '',
       Validators.required
     );
 
     controls['mainImg'] = new FormControl(
       '',
-      this.recipe && this.recipe.mainImageId ? null : Validators.required
+      this.editRecipe && this.editRecipe.mainImageId
+        ? null
+        : Validators.required
     );
     controls['content'] = new FormControl(
-      this.recipe && this.recipe.content ? this.recipe.content : '',
+      this.editRecipe && this.editRecipe.content ? this.editRecipe.content : '',
       Validators.required
     );
 
@@ -232,25 +238,13 @@ export class CreateRecipeComponent implements OnInit {
   };
 
   private save = (): void => {
-    let editRecipe: EditRecipeModel;
-
-    if (this.recipe && this.recipe.id != null) {
-      editRecipe.recipeId = +this.recipe.id;
-      editRecipe.authorId = +this.recipe.authorId;
-      editRecipe.categoryId = this.recipe.categoryId;
-      editRecipe.content = this.recipe.content;
-      editRecipe.mainImageId = this.recipe.mainImageId;
-      editRecipe.shortDescription = this.recipe.shortDescription;
-      editRecipe.title = this.recipe.title;
-    }
-
     this.validateForm();
     if (!this.isRecipeFormInvalid) {
       this.loaderService.show();
       this.updateRecipeModel();
       const action =
-        this.recipe && this.recipe.id != null
-          ? this.recipesService.putRecipe(editRecipe)
+        this.isEdit == true
+          ? this.recipesService.putRecipe(this.editRecipe, +this.recipeId)
           : this.recipesService.postRecipe(this.recipe);
       action
         .pipe(
@@ -268,8 +262,19 @@ export class CreateRecipeComponent implements OnInit {
   };
 
   private updateRecipeModel = (): void => {
-    this.recipe.title = this.titleControl.value;
-    this.recipe.content = this.contentControl.value;
+    if (this.recipe != null) {
+      this.recipe.title = this.titleControl.value;
+      this.recipe.content = this.contentControl.value;
+      this.recipe.categoryId = this.categoryIdControl.value;
+      this.recipe.shortDescription = this.shortDescriptionControl.value;
+    }
+
+    if (this.editRecipe != null) {
+      this.editRecipe.title = this.titleControl.value;
+      this.editRecipe.content = this.contentControl.value;
+      this.editRecipe.categoryId = this.categoryIdControl.value;
+      this.editRecipe.shortDescription = this.shortDescriptionControl.value;
+    }
   };
 
   onDragOver = (event): void => {
@@ -344,7 +349,13 @@ export class CreateRecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          this.recipe.mainImageId = +result.id;
+          if (this.recipe != null) {
+            this.recipe.mainImageId = +result.id;
+          }
+          if (this.editRecipe != null) {
+            this.editRecipe.mainImageId = +result.id;
+          }
+          console.log(result);
           this.setMainImgSrc(file);
         },
         (error) => {
@@ -406,6 +417,16 @@ export class CreateRecipeComponent implements OnInit {
       this.contentControl.touched &&
       this.contentControl.errors &&
       this.contentControl.errors.required
+    );
+  }
+
+  get categoryIdControl() {
+    return this.recipeForm.get('categoryId');
+  }
+
+  get isCategoryIdInvalid() {
+    return (
+      this.categoryIdControl.errors && this.categoryIdControl.errors.required
     );
   }
 }

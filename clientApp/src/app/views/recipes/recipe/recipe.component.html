@@ -42,7 +42,13 @@
                 <div class="counter">
                   <i class="fa fa-user fa-2x"></i>
                   <h4 class="count-title count-number">
-                    {{ recipe.authorName }}
+                    <a
+                      href="/user-profile/{{ recipe.authorId }}"
+                      class="count-text mx-auto"
+                      style="color: #ff5e00"
+                    >
+                      {{ recipe.authorName }}</a
+                    >
                   </h4>
                   <p class="count-text">Autor</p>
                 </div>
