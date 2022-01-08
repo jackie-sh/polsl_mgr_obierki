@@ -4,9 +4,9 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import FileUploadParser
-from .models import Recipe, RecipeCategory, RecipeImage, Rating
+from .models import Recipe, RecipeCategory, RecipeImage
 from .serializers import *
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.core import serializers
 from rest_framework import status
 
@@ -168,16 +168,6 @@ class RecipeEditView(GenericAPIView):
         except Recipe.DoesNotExist:
             return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
-
-        if 'authorId' in request.data:
-            try:
-                authorId = request.data['authorId']
-                user = User.objects.get(pk=authorId)
-                recipe.author = user
-            except User.DoesNotExist:
-                return JsonResponse({'isUpdated': False, 'errorMessage': "RecipeCategory does not exist"}, safe=False,
-                                    status=status.HTTP_404_NOT_FOUND)
-
         if 'categoryId' in request.data:
             try:
                 categoryId = request.data['categoryId']
@@ -273,4 +263,3 @@ class RecipeGetImageByImageId(GenericAPIView):
             return JsonResponse({}, status=status.HTTP_404_NOT_FOUND)
         recipeImageSerializer = RecipeImageSerializer(recipeImage)
         return JsonResponse(recipeImageSerializer.data['file'], safe=False, status=status.HTTP_200_OK)
-
