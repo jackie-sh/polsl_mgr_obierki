@@ -1,8 +1,5 @@
-import distutils
-import logging
 from distutils.util import strtobool
 
-from django.db.models import F
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
@@ -84,7 +81,6 @@ class RecipeGetView(GenericAPIView):
             return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class RecipeGetAllView(GenericAPIView):
     serializer_class = RecipeSerializer
 
@@ -118,6 +114,7 @@ class RecipeGetAllView(GenericAPIView):
 
         recipe_serializer = RecipeFullViewSerializer(recipes, many=True)
         return JsonResponse(recipe_serializer.data, safe=False, status=status.HTTP_200_OK)
+
 
 class RecipeCreateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -172,6 +169,15 @@ class RecipeEditView(GenericAPIView):
         except Recipe.DoesNotExist:
             return JsonResponse({'isUpdated': False, 'errorMessage': "Recipe does not exist"}, safe=False,
                                 status=status.HTTP_404_NOT_FOUND)
+
+        if 'authorId' in request.data:
+            try:
+                authorId = request.data['authorId']
+                user = User.objects.get(pk=authorId)
+                recipe.author = user
+            except User.DoesNotExist:
+                return JsonResponse({'isUpdated': False, 'errorMessage': "RecipeCategory does not exist"}, safe=False,
+                                    status=status.HTTP_404_NOT_FOUND)
 
         if 'categoryId' in request.data:
             try:
