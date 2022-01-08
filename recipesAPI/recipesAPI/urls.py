@@ -32,12 +32,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', include('public.urls')),
-    path('accounts/', include('tempScratchpad.urls')),
     path('admin/', admin.site.urls),
     path('api/auth/', include('rest_framework.urls')),
-
-    url(r'^', include('tempScratchpad.urls')),
     path('', include('users.urls'), name="users"),
     path('api/recipes/', include('recipes.urls'), name="recipes"),
     path('api/messages/', include('chat.urls'), name="messages"),
