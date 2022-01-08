@@ -125,7 +125,14 @@ export class CreateRecipeComponent implements OnInit {
             this.initForm();
           }
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
   };
 
@@ -254,7 +261,7 @@ export class CreateRecipeComponent implements OnInit {
         )
         .subscribe(
           (result) => {
-            this.router.navigate(['home', { saveSuccess: true }]);
+            this.router.navigate(['../my-profile', { saveSuccess: true }]);
           },
           (error) => {}
         );

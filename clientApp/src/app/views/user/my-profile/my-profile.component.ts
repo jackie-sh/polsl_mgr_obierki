@@ -23,6 +23,8 @@ export class MyProfileComponent implements OnInit {
 
   public categories: CategoryModel[] = [];
 
+  public saveRecipeSuccess = false;
+
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -36,43 +38,14 @@ export class MyProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    let isSaveSuccess = this.route.snapshot.paramMap.get('saveSuccess');
+
+    if (isSaveSuccess === 'true') {
+      this.saveRecipeSuccess = true;
+    }
+
     window.scrollTo(0, 0);
     this.fetchData();
-
-    // TODO do usunięcia jak będą endpointy
-    this.userRecipes = [
-      {
-        title: 'przepis 1',
-        authorName: 'Pawelek13',
-        recipeId: '35',
-        authorId: '43',
-        shortDescription: 'jakiś tam krótki opis o przepisie',
-        mainImageId: 10,
-        rating: 3,
-        categoryId: 2,
-        createdDate: new Date(),
-        mainImageSrc:
-          'https://image.ceneostatic.pl/data/products/112187433/i-meal-box-tajski-kurczak-z-ryzem-i-warzywami-360g.jpg',
-      },
-      {
-        title: 'przepis 2',
-        authorName: 'Pawelek13',
-        recipeId: '45',
-        authorId: '45',
-        shortDescription: 'jakiś tam krótki opis o przepisie 2',
-        mainImageId: 10,
-        rating: 3,
-        categoryId: 2,
-        createdDate: new Date(),
-        mainImageSrc:
-          'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.heb.com%2Fproduct-detail%2Fh-e-b-meal-simple-chicken-breast-southwest-marinade-potatoes-green-beans%2F2718585&psig=AOvVaw0EIYo_-5EM-5ZXdk2v12RC&ust=1640959106439000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJDv_5fXi_UCFQAAAAAdAAAAABAJ',
-      },
-    ];
-
-    this.userInfo.name = 'Pawelek13';
-    this.userInfo.rating = 4.23;
-    this.userInfo.views = 100;
-    this.userInfo.userId = '2';
   }
 
   private fetchData = (): void => {
@@ -88,7 +61,9 @@ export class MyProfileComponent implements OnInit {
         (result) => {
           this.userInfo = result;
         },
-        (error) => {}
+        (error) => {
+          console.log(error);
+        }
       );
 
     this.loaderService.show();
@@ -104,7 +79,14 @@ export class MyProfileComponent implements OnInit {
         (result) => {
           this.userRecipes = result;
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
 
     this.loaderService.show();
@@ -122,7 +104,14 @@ export class MyProfileComponent implements OnInit {
             this.categories = result;
           }
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
   };
 

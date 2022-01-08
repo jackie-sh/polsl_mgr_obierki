@@ -48,10 +48,7 @@ export class RecipeComponent implements OnInit {
     private loaderService: LoaderService,
     private recipesService: RecipesService,
     private filesService: FilesService,
-    private sanitizer: DomSanitizer,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private injector: Injector,
-    private authService: AuthService,
+    public authService: AuthService,
     @Inject('BASE_API_URL') private readonly baseApiUrl: string
   ) {}
 
@@ -72,6 +69,14 @@ export class RecipeComponent implements OnInit {
         window.scrollTo(0, 0);
       }
     });
+
+    let isSaveSuccess = this.route.snapshot.paramMap.get('saveSuccess');
+
+    if (isSaveSuccess === 'true') {
+      window.scrollTo(0, document.body.scrollHeight);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
 
   private fetchData = (id: string): void => {
@@ -91,7 +96,14 @@ export class RecipeComponent implements OnInit {
 
           this.setRecipeMainImg(+this.recipe.recipeId);
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
 
     this.loaderService.show();
@@ -109,7 +121,14 @@ export class RecipeComponent implements OnInit {
             this.categories = result;
           }
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
   };
 
@@ -175,7 +194,12 @@ export class RecipeComponent implements OnInit {
         )
         .subscribe(
           (result) => {
-            window.location.reload();
+            this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+            this.router.onSameUrlNavigation = 'reload';
+            this.router.navigate([
+              'recipe/details/' + this.recipe.recipeId,
+              { saveSuccess: true },
+            ]);
           },
           (error) => {}
         );

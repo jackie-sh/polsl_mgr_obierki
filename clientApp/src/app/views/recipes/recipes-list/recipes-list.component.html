@@ -32,13 +32,7 @@
                     class="custom-card"
                   >
                     <div
-                      class="
-                        card
-                        border-0
-                        recipe-zoom-list
-                        js-recipe-observer
-                        theme-filter
-                      "
+                      class="card border-0 recipe-zoom-list js-recipe-observer theme-filter"
                       style="opacity: 0"
                     >
                       <div class="row no-gutters">
@@ -69,9 +63,9 @@
                             <small>
                               <p>
                                 Autor:
-                                <span style="color: #ff5e00">{{
-                                  recipe.authorName
-                                }}</span>
+                                <span style="color: #ff5e00">
+                                  {{ recipe.authorName }}
+                                </span>
                                 &nbsp; &nbsp; Utworzono:
                                 <span style="color: #ff5e00">{{
                                   recipe.createdDate | date: "dd-MM-yyyy"
@@ -82,17 +76,18 @@
                                 }}</span>
                                 &nbsp; &nbsp; Ocena:
                                 <span style="color: #ff5e00">
-                                  {{ recipe.rating | number: "1.2-2" }}
+                                  <ng-container *ngIf="recipe.rating">
+                                    {{ recipe.rating | number: "1.2-2" }}
+                                  </ng-container>
+                                  <ng-container *ngIf="recipe.rating == null">
+                                    Brak
+                                  </ng-container>
                                 </span>
                               </p>
                             </small>
                             <p
                               *ngIf="recipe.shortDescription != null"
-                              class="
-                                card-text
-                                description-text
-                                recipe-card-description-list
-                              "
+                              class="card-text description-text recipe-card-description-list"
                             >
                               {{ recipe.shortDescription }}
                             </p>

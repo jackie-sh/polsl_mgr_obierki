@@ -49,9 +49,6 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    // TODO odkomentowac jak będzie metoda do pobierania
-    //  this.fetchRecipes();
-
     setTimeout(() => {
       this.showRecipes();
     }, 50);
@@ -63,7 +60,7 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.document.documentElement.lang = 'pl';
-
+    this.fetchRecipes();
     DomHelper.scrollToTop();
   }
 
@@ -144,23 +141,25 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
     if (this.filterRefDesktop) {
       const filter = this.filterRefDesktop.getActiveFilters();
 
-      params.append('title', filter.title);
+      if (filter.title != null && filter.title != '') {
+        params = params.append('title', filter.title);
+      }
 
       if (filter.sort === 'DateDesc') {
-        params.append('orderByDateDesc', 'false');
-        params.append('orderByDateAsc', 'true');
+        params = params.append('orderByDateDesc', 'false');
+        params = params.append('orderByDateAsc', 'true');
       } else if (filter.sort === 'DateAsc') {
-        params.append('orderByDateDesc', 'true');
-        params.append('orderByDateAsc', 'false');
+        params = params.append('orderByDateDesc', 'true');
+        params = params.append('orderByDateAsc', 'false');
       } else {
-        params.append('orderByDateDesc', 'false');
-        params.append('orderByDateAsc', 'false');
+        params = params.append('orderByDateDesc', 'false');
+        params = params.append('orderByDateAsc', 'false');
       }
 
       if (filter.categoryId != null) {
-        params.append('categoryId', filter.categoryId);
+        params = params.append('categoryId', filter.categoryId);
       } else {
-        params.append('categoryId', '0');
+        params = params.append('categoryId', '0');
       }
     }
 
@@ -175,11 +174,11 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
     this.recipes.forEach((x) => {
       if (x.mainImageId != null) {
         this.filesService
-          .getFileById(x.mainImageId)
+          .getFileById(x.recipeId)
           .pipe(finalize(() => {}))
           .subscribe(
             (result) => {
-              //  this.setMainImgSrc(x, result.body);
+              x.mainImageSrc = 'http://localhost:8000' + result.file;
             },
             (error) => {}
           );

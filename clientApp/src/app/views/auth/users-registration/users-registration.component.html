@@ -1,3 +1,26 @@
+<div
+  *ngIf="alertModel.show"
+  class="alert alert-dismissible mt-3"
+  [ngClass]="alertModel.class"
+  role="alert"
+>
+  <div>{{ alertModel.text }}</div>
+  <ul *ngIf="alertModel.show && alertModel.messages.length">
+    <li *ngFor="let message of alertModel.messages">
+      {{ message }}
+    </li>
+  </ul>
+  <button
+    type="button"
+    class="close"
+    data-dismiss="alert"
+    aria-label="Close"
+    (click)="closeAlert()"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
 <section class="py-5">
   <div class="container">
     <div class="row d-flex justify-content-center align-items-center">
@@ -16,12 +39,7 @@
               />
             </div>
             <div
-              class="
-                col-md-6 col-lg-7
-                d-flex
-                align-items-center
-                slide-in-blurred-top
-              "
+              class="col-md-6 col-lg-7 d-flex align-items-center slide-in-blurred-top"
             >
               <div class="card-body p-4 p-lg-5 text-black">
                 <div class="d-flex align-items-center mb-3 pb-1">
@@ -134,28 +152,6 @@
                     </button>
                   </div>
                 </form>
-                <div
-                  *ngIf="alertModel.show"
-                  class="alert alert-dismissible mt-3"
-                  [ngClass]="alertModel.class"
-                  role="alert"
-                >
-                  <div>{{ alertModel.text }}</div>
-                  <ul *ngIf="alertModel.show && alertModel.messages.length">
-                    <li *ngFor="let message of alertModel.messages">
-                      {{ message }}
-                    </li>
-                  </ul>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Close"
-                    (click)="closeAlert()"
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
                 <p style="color: #393f81">
                   Posiadasz konto?
                   <a routerLink="/auth/login" style="color: #393f81"

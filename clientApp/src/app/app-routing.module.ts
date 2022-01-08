@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, Route } from '@angular/router';
+import { Routes, RouterModule, Route, Router } from '@angular/router';
 import { AboutComponent } from './views/about/about.component';
 import { Error404Component } from './views/errors/error404/error404.component';
 import { Error500Component } from './views/errors/error500/error500.component';
@@ -97,4 +97,10 @@ const routes: Route[] = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  constructor(private router: Router) {
+    this.router.errorHandler = (error: any) => {
+      this.router.navigate(['404']);
+    };
+  }
+}

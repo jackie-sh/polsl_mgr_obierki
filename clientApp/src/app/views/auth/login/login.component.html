@@ -1,3 +1,12 @@
+<div
+  *ngIf="alertModel.show"
+  class="alert mt-3"
+  [ngClass]="alertModel.class"
+  role="alert"
+>
+  {{ alertModel.text }}
+</div>
+
 <section class="py-5">
   <div class="container h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -16,12 +25,7 @@
               />
             </div>
             <div
-              class="
-                col-md-6 col-lg-7
-                d-flex
-                align-items-center
-                slide-in-blurred-top
-              "
+              class="col-md-6 col-lg-7 d-flex align-items-center slide-in-blurred-top"
             >
               <div class="card-body p-4 p-lg-5 text-black">
                 <div class="d-flex align-items-center mb-3 pb-1">
@@ -81,14 +85,6 @@
                       class="red-text"
                       >{{ error.errorMessage }}</span
                     >
-                  </div>
-                  <div
-                    *ngIf="alertModel.show"
-                    class="alert mt-3"
-                    [ngClass]="alertModel.class"
-                    role="alert"
-                  >
-                    {{ alertModel.text }}
                   </div>
                   <div class="pt-1 mb-4">
                     <button class="btn btn-dark btn-lg btn-block" type="submit">

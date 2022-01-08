@@ -61,7 +61,14 @@ export class UserProfileComponent implements OnInit {
         (result) => {
           this.userInfo = result;
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
 
     this.loaderService.show();
@@ -77,7 +84,14 @@ export class UserProfileComponent implements OnInit {
         (result) => {
           this.userRecipes = result;
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
 
     this.loaderService.show();
@@ -95,7 +109,14 @@ export class UserProfileComponent implements OnInit {
             this.categories = result;
           }
         },
-        (error) => {}
+        (error) => {
+          if (error.status == 404) {
+            this.router.navigate(['404']);
+          }
+          if (error.status == 500) {
+            this.router.navigate(['500']);
+          }
+        }
       );
   };
 
@@ -109,7 +130,14 @@ export class UserProfileComponent implements OnInit {
             (result) => {
               //   this.setMainImgSrc(x, result.body);
             },
-            (error) => {}
+            (error) => {
+              if (error.status == 404) {
+                this.router.navigate(['404']);
+              }
+              if (error.status == 500) {
+                this.router.navigate(['500']);
+              }
+            }
           );
       }
     });

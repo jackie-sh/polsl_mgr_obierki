@@ -18,7 +18,14 @@
               <div class="col-md-3">
                 <div class="counter">
                   <i class="fa fa-star fa-2x"></i>
-                  <h4 class="count-title count-number">{{ recipe.rating }}</h4>
+                  <h4 class="count-title count-number">
+                    <ng-container *ngIf="recipe.rating">
+                      {{ recipe.rating | number: "1.2-2" }}
+                    </ng-container>
+                    <ng-container *ngIf="recipe.rating == null">
+                      Brak
+                    </ng-container>
+                  </h4>
                   <p class="count-text">Ocena</p>
                 </div>
               </div>
@@ -55,12 +62,12 @@
               </div>
             </div>
             <br />
-            <div class="image-container mx-auto d-block pt-4">
+            <div class="mx-auto d-block pt-4">
               <div class="text-center">
                 <img
                   [src]="mainImageSrc"
                   alt="Główny obraz przepisu"
-                  class="fit-image img-responsive"
+                  style="max-width: 100%"
                 />
               </div>
             </div>
@@ -94,51 +101,57 @@
             <div class="col col-xl-12" style="color: #ff5e00">
               <h3>Komentarze</h3>
               <hr />
-              <div
-                class="row mt-3"
-                [formGroup]="commentForm"
-                *ngIf="commentForm"
-              >
-                <div class="card card-create-comment ml-3">
-                  <div class="row">
-                    <div class="col-2">
-                      <img
-                        src="https://img.myloview.pl/tapety/hand-drawn-modern-man-avatar-profile-icon-or-portrait-icon-user-flat-avatar-icon-sign-profile-male-symbol-700-234216721.jpg"
-                        width="50"
-                        class="rounded-circle mt-2"
-                      />
-                    </div>
-                    <div class="col-10">
-                      <div class="comment-box ml-2">
-                        <h4>Dodaj komentarz</h4>
-                        <ngb-rating
-                          formControlName="rating"
-                          [max]="5"
-                          style="color: orange"
-                        ></ngb-rating>
-                        <textarea
-                          pInputTextArea
-                          maxlength="512"
-                          type="text"
-                          class="form-control mb-2"
-                          id="comment"
-                          placeholder="Komentarz"
-                          formControlName="comment"
-                        ></textarea>
-                        <div *ngIf="isCommentInvalid">
-                          <span class="red-text">Pole jest wymagane.</span>
-                        </div>
+              <ng-container *ngIf="authService.isLoggedIn">
+                <div
+                  class="row mt-3"
+                  [formGroup]="commentForm"
+                  *ngIf="commentForm"
+                >
+                  <div class="card card-create-comment ml-3">
+                    <div class="row">
+                      <div class="col-2">
+                        <img
+                          src="https://img.myloview.pl/tapety/hand-drawn-modern-man-avatar-profile-icon-or-portrait-icon-user-flat-avatar-icon-sign-profile-male-symbol-700-234216721.jpg"
+                          width="50"
+                          class="rounded-circle mt-2"
+                        />
                       </div>
-                      <button
-                        class="btn btn-dark btn-sm float-right"
-                        (click)="sendComment()"
-                      >
-                        Wyślij komentarz
-                      </button>
+                      <div class="col-10">
+                        <div class="comment-box ml-2">
+                          <h4>Dodaj komentarz</h4>
+                          <ngb-rating
+                            formControlName="rating"
+                            [max]="5"
+                            style="color: orange"
+                          ></ngb-rating>
+                          <textarea
+                            pInputTextArea
+                            maxlength="512"
+                            type="text"
+                            class="form-control mb-2"
+                            id="comment"
+                            placeholder="Komentarz"
+                            formControlName="comment"
+                          ></textarea>
+                          <div *ngIf="isCommentInvalid">
+                            <span class="red-text">Pole jest wymagane.</span>
+                          </div>
+                        </div>
+                        <button
+                          class="btn btn-dark btn-sm float-right"
+                          (click)="sendComment()"
+                        >
+                          Wyślij komentarz
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
+              <ng-container *ngIf="authService.isLoggedIn == false">
+                Zaloguj się aby dodać komentarz
+                <br />
+              </ng-container>
             </div>
             <br />
             <div class="col col-xl-12">
@@ -158,7 +171,11 @@
                           ><small
                             class="font-weight-bold"
                             style="color: #ff5e00"
-                            >{{ comment.userName }}</small
+                            ><a
+                              style="color: #ff5e00"
+                              href="/user-profile/{{ comment.userId }}"
+                              >{{ comment.userName }}</a
+                            ></small
                           >
                           <br />
                           <small class="font-weight-bold">{{
