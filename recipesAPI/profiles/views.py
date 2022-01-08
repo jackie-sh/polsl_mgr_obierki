@@ -8,32 +8,28 @@ from .serializers import *
 from django.http import JsonResponse
 from django.core import serializers
 from rest_framework import status
-from recipes.serializers import RecipeFullViewSerializer
+from recipes.serializers import RecipeSerializer, RecipeFullViewSerializer
+from recipes.models import Recipe
 
 
 class UserProfileGetUserRecipesView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = RecipeFullViewSerializer
+    serializer_class = RecipeSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["userProfile"],
-                         request_body=Schema(
-                             type=TYPE_OBJECT,
-                             properties={
-                                 'userId': Schema(type=TYPE_STRING)
-                             }
-                         ),
                          responses={
                              status.HTTP_200_OK: Schema(type=TYPE_OBJECT,
                                                         properties={
-                                                            'title': Schema(type=TYPE_STRING),
-                                                            'authorName': Schema(type=TYPE_STRING),
                                                             'recipeId': Schema(type=TYPE_INTEGER),
                                                             'authorId': Schema(type=TYPE_INTEGER),
-                                                            'shortDescription': Schema(type=TYPE_STRING),
-                                                            'mainImageId': Schema(type=TYPE_INTEGER),
-                                                            'rating': Schema(type=TYPE_INTEGER),
                                                             'categoryId': Schema(type=TYPE_INTEGER),
+                                                            'shortDescription': Schema(type=TYPE_STRING),
+                                                            'title': Schema(type=TYPE_STRING),
                                                             'createdDate': Schema(type=TYPE_STRING),
+                                                            'mainImageId': Schema(type=TYPE_INTEGER),
+                                                            'authorName': Schema(type=TYPE_STRING),
+                                                            'rating': Schema(type=TYPE_INTEGER),
 
                                                         })
                          }
@@ -61,12 +57,13 @@ class UserProfileGetUserRecipesView(GenericAPIView):
 class UserProfileGetProfileView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserProfileSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["userProfile"],
                          request_body=Schema(
                              type=TYPE_OBJECT,
                              properties={
-                                 'userId': Schema(type=TYPE_STRING)
+                                 'userId': Schema(type=TYPE_INTEGER)
                              }
                          ),
                          responses={

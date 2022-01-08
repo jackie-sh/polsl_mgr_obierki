@@ -7,7 +7,6 @@ from rest_framework.parsers import FileUploadParser
 from .models import Recipe, RecipeCategory, RecipeImage
 from .serializers import *
 from django.http import JsonResponse
-from django.core import serializers
 from rest_framework import status
 
 
@@ -23,6 +22,7 @@ def create_response(serializer):
 
 class RecipeGetView(GenericAPIView):
     serializer_class = RecipeSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"],
                          responses={
@@ -57,6 +57,7 @@ class RecipeGetView(GenericAPIView):
 
 class RecipeGetAllView(GenericAPIView):
     serializer_class = RecipeSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"],
                          manual_parameters=[
@@ -93,6 +94,7 @@ class RecipeGetAllView(GenericAPIView):
 class RecipeCreateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"],
                          request_body=Schema(
@@ -125,6 +127,7 @@ class RecipeCreateView(GenericAPIView):
 class RecipeEditView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"],
                          request_body=Schema(
@@ -166,6 +169,7 @@ class RecipeEditView(GenericAPIView):
 class RecipeDeleteView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"])
     def delete(self, request, pk):
@@ -185,6 +189,7 @@ class RecipeDeleteView(GenericAPIView):
 
 class RecipeCategoryView(GenericAPIView):
     serializer_class = RecipeCategorySerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"])
     def get(self, request):
@@ -196,6 +201,7 @@ class RecipeCategoryView(GenericAPIView):
 class RecipeCreateCommentView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = RatingSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["recipe"],
                          request_body=Schema(
@@ -223,6 +229,7 @@ class RecipeCreateCommentView(GenericAPIView):
 class RecipeUploadImage(GenericAPIView):
     serializer_class = RecipeImageSerializer
     parser_class = [FileUploadParser]
+    queryset = ''
 
     @swagger_auto_schema(tags=["image"],
                          request_body=Schema(
@@ -247,6 +254,7 @@ class RecipeUploadImage(GenericAPIView):
 
 class RecipeGetImage(GenericAPIView):
     serializer_class = RecipeImageSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["image"],
                          responses={
@@ -270,6 +278,7 @@ class RecipeGetImage(GenericAPIView):
 
 class RecipeGetImageByImageId(GenericAPIView):
     serializer_class = RecipeImageSerializer
+    queryset = ''
 
     @swagger_auto_schema(tags=["image"],
                          responses={
