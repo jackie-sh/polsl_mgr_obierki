@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'public.apps.PublicConfig',
     'rest_framework',
+    'channels',
     'corsheaders',
     'rest_framework.authtoken',
     'drf_yasg',
@@ -167,3 +168,6 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False
 }
+
+# Channels
+ASGI_APPLICATION = 'recipesAPI.asgi.application'
