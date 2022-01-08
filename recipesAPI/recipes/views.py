@@ -1,5 +1,8 @@
+import distutils
 import logging
+from distutils.util import strtobool
 
+from django.db.models import F
 from drf_yasg.openapi import *
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
@@ -12,10 +15,6 @@ from django.core import serializers
 from rest_framework import status
 
 
-def get_all(request):
-    recipes = Recipe.objects.all()
-    data = serializers.serialize('json', recipes)
-    return HttpResponse(data, content_type='application/json')
 
 
 def create_response(serializer):
@@ -109,6 +108,41 @@ class RecipeGetView(GenericAPIView):
         except serializers.ValidationError as valEr:
             return JsonResponse({'errorMessage': valEr.detail}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class RecipeGetAllView(GenericAPIView):
+    serializer_class = RecipeSerializer
+
+    @swagger_auto_schema(tags=["recipe"],
+                         manual_parameters=[
+                             Parameter('title', IN_QUERY, type='string'),
+                             Parameter('orderByDateAsc', IN_QUERY, type='boolean'),
+                             Parameter('orderByDateDesc', IN_QUERY, type='boolean'),
+                             Parameter('categoryId', IN_QUERY, type='integer'),
+                         ])
+    def get(self, request):
+
+        data = request.GET
+        has_title = 'title' in data
+        has_category = 'categoryId' in data
+
+        recipes = Recipe.objects
+        if has_title:
+            recipes = recipes.filter(title__contains=data['title'])
+        if has_category:
+            cat_id = int(data['categoryId'])
+            if cat_id != 0:
+                recipes = recipes.filter(category=cat_id)
+
+        if 'orderByDateAsc' in data:
+            if bool(strtobool(data['orderByDateAsc'])) is True:
+                recipes = recipes.order_by('create_date')
+        if 'orderByDateDesc' in data:
+            if bool(strtobool(data['orderByDateDesc'])) is True:
+                recipes = recipes.order_by('-create_date')
+
+        recipe_serializer = RecipeFullViewSerializer(recipes, many=True)
+        return JsonResponse(recipe_serializer.data, safe=False, status=status.HTTP_200_OK)
 
 class RecipeCreateView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
