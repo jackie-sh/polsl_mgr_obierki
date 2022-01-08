@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
+    'chat.apps.MessagesConfig',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

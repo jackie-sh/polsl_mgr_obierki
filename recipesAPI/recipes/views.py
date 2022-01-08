@@ -15,8 +15,6 @@ from django.core import serializers
 from rest_framework import status
 
 
-
-
 def create_response(serializer):
     if serializer.is_valid():
         serializer.save()
