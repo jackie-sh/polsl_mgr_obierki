@@ -171,3 +171,9 @@ SIMPLE_JWT = {
 
 # Channels
 ASGI_APPLICATION = 'recipesAPI.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "TEST_CONFIG": {"expiry": 100500},
+    }
+}

@@ -53,3 +53,32 @@ class SendMessageView(GenericAPIView):
         data['to_user'] = data['toUserId']
         new_message = MessageSerializerCreate(data=data)
         return create_response(new_message)
+
+class PrivChannelView(GenericAPIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = MessageSerializerGet
+
+    @staticmethod
+    def encode_ids(my_id, other_id):
+        if my_id <= other_id:
+            smaller_id = my_id
+            larger_id = other_id
+        else:
+            smaller_id = other_id
+            larger_id = my_id
+        return  str(smaller_id)+'_'+str(larger_id)
+
+    @staticmethod
+    def get_other_id(room_name, my_id):
+        ids = room_name.split('_')
+        if int(ids[0]) == my_id:
+            return int(ids[1])
+        else:
+            return int(ids[0])
+
+    @swagger_auto_schema(tags=["messages"])
+    def get(self, request, id):
+        my_id = request.user.id
+        other_id = id
+        return JsonResponse({'channelId': self.encode_ids(my_id, other_id)}, status=status.HTTP_200_OK)
