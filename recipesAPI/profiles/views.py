@@ -13,7 +13,6 @@ from recipes.models import Recipe
 
 
 class UserProfileGetUserRecipesView(GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = RecipeSerializer
     queryset = ''
 
@@ -55,7 +54,6 @@ class UserProfileGetUserRecipesView(GenericAPIView):
 
 
 class UserProfileGetProfileView(GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserProfileSerializer
     queryset = ''
 
