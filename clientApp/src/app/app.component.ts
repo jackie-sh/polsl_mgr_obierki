@@ -39,7 +39,13 @@ export class AppComponent implements OnInit {
       .getAllUsers()
       .pipe(
         finalize(() => {
+          let loggedId = this.authService.loggedId;
+
           for (var user of this.users) {
+            if (user.id == +loggedId) {
+              console.log('cont');
+              continue;
+            }
             this.adapter.addParticipand(user.id, user.username);
           }
         })
