@@ -119,11 +119,11 @@ export class MyProfileComponent implements OnInit {
     this.userRecipes.forEach((x) => {
       if (x.mainImageId != null) {
         this.filesService
-          .getFileById(x.mainImageId)
+          .getFileById(+x.recipeId)
           .pipe(finalize(() => {}))
           .subscribe(
             (result) => {
-              // this.setMainImgSrc(x, result.body);
+              x.mainImageSrc = 'http://localhost:8000' + result.file;
             },
             (error) => {}
           );

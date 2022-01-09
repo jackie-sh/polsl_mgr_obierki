@@ -26,7 +26,16 @@
                 <div class="counter">
                   <i class="fa fa-lightbulb-o fa-2x"></i>
                   <h4 class="count-title count-number">
-                    {{ userRecipes.length }}
+                    <ng-container *ngIf="userRecipes.length">
+                      {{ userRecipes.length }}
+                    </ng-container>
+                    <ng-container
+                      *ngIf="
+                        userRecipes.length == null || userRecipes.length == 0
+                      "
+                    >
+                      0
+                    </ng-container>
                   </h4>
                   <p class="count-text">Ilość przepisów</p>
                 </div>
@@ -35,7 +44,12 @@
                 <div class="counter">
                   <i class="fa fa-eye fa-2x"></i>
                   <h4 class="count-title count-number">
-                    {{ userInfo.views }}
+                    <ng-container *ngIf="userInfo.views">
+                      {{ userInfo.views }}
+                    </ng-container>
+                    <ng-container *ngIf="userInfo.views == null">
+                      Brak
+                    </ng-container>
                   </h4>
                   <p class="count-text">Wyświetleń przepisów</p>
                 </div>
@@ -44,7 +58,12 @@
                 <div class="counter">
                   <i class="fa fa-star fa-2x"></i>
                   <h4 class="count-title count-number">
-                    {{ userInfo.rating }}
+                    <ng-container *ngIf="userInfo.rating">
+                      {{ userInfo.rating }}
+                    </ng-container>
+                    <ng-container *ngIf="userInfo.rating == null">
+                      Brak
+                    </ng-container>
                   </h4>
                   <p class="count-text">Ocena</p>
                 </div>
@@ -77,10 +96,7 @@
                             <div class="col-md-4">
                               <div class="recipe-container-text-image-list">
                                 <img
-                                  class="
-                                    card-img-list
-                                    recipes-portal-avatar-list
-                                  "
+                                  class="card-img-list recipes-portal-avatar-list"
                                   [src]="recipe.mainImageSrc"
                                   alt="Główny obraz przepisu"
                                 />
@@ -112,18 +128,21 @@
                                       getCategoryName(recipe.categoryId)
                                     }}</span>
                                     &nbsp; &nbsp; Ocena:
-                                    <span style="color: #ff5e00">{{
-                                      recipe.rating | number: "1.2-2"
-                                    }}</span>
+                                    <span style="color: #ff5e00">
+                                      <ng-container *ngIf="recipe.rating">
+                                        {{ recipe.rating | number: "1.2-2" }}
+                                      </ng-container>
+                                      <ng-container
+                                        *ngIf="recipe.rating == null"
+                                      >
+                                        Brak
+                                      </ng-container>
+                                    </span>
                                   </p>
                                 </small>
                                 <p
                                   *ngIf="recipe.shortDescription != null"
-                                  class="
-                                    card-text
-                                    description-text
-                                    recipe-card-description-list
-                                  "
+                                  class="card-text description-text recipe-card-description-list"
                                 >
                                   {{ recipe.shortDescription }}
                                 </p>
