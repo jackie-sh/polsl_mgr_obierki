@@ -51,7 +51,8 @@ class LoginView(GenericAPIView):
 
         if user:
             token = RefreshToken.for_user(user)
-            data = {'id': user.id, 'accessToken': str(token.access_token), 'refreshToken': str(token)}
+            data = {'id': user.id, 'name': user.username, 'accessToken': str(token.access_token),
+                    'refreshToken': str(token)}
             return JsonResponse(data, status=status.HTTP_200_OK)
 
         return JsonResponse({'errorMessage': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
