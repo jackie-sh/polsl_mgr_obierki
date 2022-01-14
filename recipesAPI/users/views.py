@@ -7,8 +7,10 @@ from rest_framework.generics import GenericAPIView
 import json
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
+
 from users.models import User
-from users.serializers import UserSerializer, LoginSerializer
+from users.serializers import *
 from django.contrib import auth
 
 
@@ -53,22 +55,6 @@ class LoginView(GenericAPIView):
             return JsonResponse(data, status=status.HTTP_200_OK)
 
         return JsonResponse({'errorMessage': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-class LoginRefreshView(GenericAPIView):
-    permission_classes = [permissions.AllowAny]
-
-    @swagger_auto_schema(tags=["user"],
-                         request_body=Schema(
-                             type=TYPE_OBJECT,
-                             properties={
-                                 'refreshToken': Schema(type=TYPE_STRING)
-                             }
-                         )
-                         )
-    def post(self, request):
-        token = RefreshToken(request.data['refreshToken'])
-        return JsonResponse({'accessToken': str(token.access_token)}, status=status.HTTP_501_NOT_IMPLEMENTED)
 
 
 class UserDetail(APIView):
