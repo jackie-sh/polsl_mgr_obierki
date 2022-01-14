@@ -15,14 +15,6 @@ export class UserServiceService {
   ) {}
 
   getAllUsers = (): Observable<UserDetailsModel[]> => {
-    /*
-    let httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-      }),
-    };
-*/
     return this.http.get<UserDetailsModel[]>(
       `${this.baseApiUrl}/users/getAllUsers`,
       {}

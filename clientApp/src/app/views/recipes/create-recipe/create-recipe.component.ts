@@ -156,9 +156,7 @@ export class CreateRecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          console.log(result);
           this.imageSrc = 'http://localhost:8000' + result.file;
-          // this.setMainImgSrc(result.file);
         },
         (error) => {}
       );
@@ -362,7 +360,7 @@ export class CreateRecipeComponent implements OnInit {
           if (this.editRecipe != null) {
             this.editRecipe.mainImageId = +result.id;
           }
-          console.log(result);
+
           this.setMainImgSrc(file);
         },
         (error) => {

@@ -16,14 +16,17 @@
 <app-loader></app-loader>
 <ng-container *ngIf="authService.isLoggedIn">
   <ng-chat
+    #ngChatInstance
     [adapter]="adapter"
     [pollFriendsList]="true"
     [title]="chatTitle"
-    [isCollapsed]="true"
     [searchEnabled]="false"
     [pollingInterval]="1000"
     [messagePlaceholder]="messagePlaceholder"
     [userId]="authService.loggedId"
+    [isViewportOnMobileEnabled]="true"
+    (onParticipantChatOpened)="openedParticipantChat($event)"
+    (onParticipantChatClosed)="closedParticipantChat($event)"
   ></ng-chat>
 </ng-container>
 

@@ -1,6 +1,5 @@
 export class SendMessageModel {
-  fromUserId: number;
-  toUserId: number;
+  fromUserId: string;
+  toUserId: string;
   message: string;
-  sendDate: Date;
 }

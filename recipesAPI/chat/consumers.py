@@ -36,7 +36,8 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         sender = int(text_data_json['fromUserId'])
-        receiver = views.PrivChannelView.get_other_id(self.room_name, sender)
+        receiver = int(text_data_json['toUserId'])
+        #receiver = views.PrivChannelView.get_other_id(self.room_name, sender)
 
         data = {'from_user': sender,
                 'to_user': receiver,
@@ -52,6 +53,7 @@ class ChatConsumer(WebsocketConsumer):
                 {
                     'type': 'chat_message',
                     'sender' : sender,
+                    'receiver' : receiver,
                     'message': message
                 }
             )
@@ -60,7 +62,7 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         message = event['message']
         sender = int(event['sender'])
-        receiver = views.PrivChannelView.get_other_id(self.room_name, sender)
+        receiver = int(event['receiver'])
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({

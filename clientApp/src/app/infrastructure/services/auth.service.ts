@@ -43,8 +43,8 @@ export class AuthService {
     this.tokenSubscriber = new Subject<string>();
     this.refreshToken((response) => {
       const helper = new JwtHelperService();
-      const decodetdTokenAccess = helper.decodeToken(response.accessToken);
-      let expirationDate = new Date(decodetdTokenAccess.exp * 1000);
+      const decodedTokenAccess = helper.decodeToken(response.access);
+      let expirationDate = new Date(decodedTokenAccess.exp * 1000);
 
       this.createRefreshService(moment(expirationDate));
     });
@@ -94,11 +94,9 @@ export class AuthService {
     localStorage.setItem(ACCESS_TOKEN_NAME, response.accessToken); // access token
     localStorage.setItem(REFRESH_TOKEN_NAME, response.refreshToken); // refresh token
 
-    //  localStorage.setItem(USERNAME_LOGIN, decodetdTokenAccess.username);
+    localStorage.setItem(USERNAME_LOGIN, response.name);
 
     let expirationDate = new Date(decodetdTokenAccess.exp * 1000);
-    console.log('setlocalstorage');
-    console.log(expirationDate);
 
     localStorage.setItem(EXPIRATION_DATE_NAME, expirationDate.toString()); // token exporation date
     localStorage.setItem(
@@ -161,7 +159,6 @@ export class AuthService {
   };
 
   private countInterval = (expirationDate: Moment): number => {
-    console.log(expirationDate);
     const nowTime = moment();
     if (expirationDate.isBefore(nowTime))
       throw new Error('The expiration date is past');
@@ -175,7 +172,7 @@ export class AuthService {
     const token = localStorage.getItem(ACCESS_TOKEN_NAME);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_NAME);
     if (token && refreshToken) {
-      const params = { accessToken: token, refreshToken: refreshToken };
+      const params = { refresh: refreshToken };
       this.http
         .post<any>(`${this.baseApiUrl}/refresh-token`, params)
         .pipe(
@@ -188,38 +185,24 @@ export class AuthService {
             this.updateTokenValues(res);
             pipe(res);
             this.tokenSubscriber.next(res.token);
-          }
-          // () => this.logOut() //TODO!
+          },
+          () => this.logOut()
         );
     }
   };
 
-  private removeOldToken = (token: string, refreshToken: string): void => {
-    // TODO ???
-    /*
-    if (token && refreshToken) {
-      const params = { accessToken: token, refreshToken: refreshToken };
-      this.http.post<any>(`${this.baseApiUrl}/auth/DeleteJwtToken`, params);
-    }
-    */
-  };
+  private removeOldToken = (token: string, refreshToken: string): void => {};
 
   private updateTokenValues = (response: any): void => {
     const helper = new JwtHelperService();
 
-    const decodetdTokenAccess = helper.decodeToken(response.accessToken);
-    const decodetdTokenRefresh = helper.decodeToken(response.refreshToken);
-
-    localStorage.setItem(ACCESS_TOKEN_NAME, response.accessToken); // access token
-    localStorage.setItem(REFRESH_TOKEN_NAME, response.refreshToken); // refresh token
+    const decodedTokenAccess = helper.decodeToken(response.access);
+    let tokenExp = decodedTokenAccess.exp;
+    localStorage.setItem(ACCESS_TOKEN_NAME, response.access); // access token
 
     localStorage.setItem(
       EXPIRATION_DATE_NAME,
-      new Date(decodetdTokenAccess.exp * 1000).toString()
-    ); // token exporation date
-    localStorage.setItem(
-      REFRESH_TOKEN_DATE_NAME,
-      new Date(decodetdTokenRefresh.exp * 1000).toString()
+      new Date(tokenExp * 1000).toString()
     ); // token exporation date
   };
 }

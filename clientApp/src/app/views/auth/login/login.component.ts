@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit {
       .subscribe(
         (response) => {
           this.router.navigate([this.redirectUrl]);
+          window.location.reload();
         },
         (error) => {
           this.showAlert(this.texts.loginFailureMessage, 'alert-danger', 10000);

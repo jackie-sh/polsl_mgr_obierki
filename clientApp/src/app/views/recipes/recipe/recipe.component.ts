@@ -153,9 +153,7 @@ export class RecipeComponent implements OnInit {
       )
       .subscribe(
         (result) => {
-          console.log(result);
           this.mainImageSrc = 'http://localhost:8000' + result.file;
-          //this.setMainImgSrc(result.body);
         },
         (error) => {}
       );

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observer, Subject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -10,31 +10,46 @@ import { AuthService } from './auth.service';
 export class WebsocketService {
   constructor() {}
 
+  onMessage: EventEmitter<any> = new EventEmitter();
   private subject: Subject<MessageEvent>;
+  public ws: WebSocket;
 
   public connect(url): Subject<MessageEvent> {
     if (!this.subject) {
       this.subject = this.create(url);
-      console.log('Successfully connected: ' + url);
     }
     return this.subject;
   }
 
   private create(url): Subject<MessageEvent> {
-    let ws = new WebSocket(url);
+    const self = this;
+
+    this.ws = new WebSocket(url);
     let observable = Observable.create((obs: Observer<MessageEvent>) => {
-      ws.onmessage = obs.next.bind(obs);
-      ws.onerror = obs.error.bind(obs);
-      ws.onclose = obs.complete.bind(obs);
-      return ws.close.bind(ws);
+      this.ws.onmessage = obs.next.bind(obs);
+      this.ws.onerror = obs.error.bind(obs);
+      this.ws.onclose = obs.complete.bind(obs);
+      return this.ws.close.bind(this.ws);
     });
     let observer = {
       next: (data: Object) => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify(data));
+        if (this.ws.readyState === WebSocket.OPEN) {
+          this.ws.send(JSON.stringify(data));
         }
       },
     };
+
+    this.ws.onopen = function () {};
+
+    this.ws.onerror = function () {};
+
+    this.ws.onclose = function () {};
+
+    this.ws.onmessage = function (msg) {
+      const mes = JSON.parse(msg.data);
+      self.onMessage.emit(mes);
+    };
+
     return Subject.create(observer, observable);
   }
 }

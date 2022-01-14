@@ -94,7 +94,6 @@ export class RecipesListComponent implements OnInit, AfterViewInit {
       )
       .subscribe(
         (result) => {
-          console.log(result);
           this.recipes = result;
         },
         (error) => {}
