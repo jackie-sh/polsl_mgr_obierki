@@ -125,3 +125,7 @@ body {
     opacity: 1;
   }
 }
+
+.ng-chat-participant-status {
+  display: none !important;
+}

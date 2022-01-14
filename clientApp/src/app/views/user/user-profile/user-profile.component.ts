@@ -124,20 +124,13 @@ export class UserProfileComponent implements OnInit {
     this.userRecipes.forEach((x) => {
       if (x.mainImageId != null) {
         this.filesService
-          .getFileById(x.mainImageId)
+          .getFileById(+x.recipeId)
           .pipe(finalize(() => {}))
           .subscribe(
             (result) => {
-              //   this.setMainImgSrc(x, result.body);
+              x.mainImageSrc = 'http://localhost:8000' + result.file;
             },
-            (error) => {
-              if (error.status == 404) {
-                this.router.navigate(['404']);
-              }
-              if (error.status == 500) {
-                this.router.navigate(['500']);
-              }
-            }
+            (error) => {}
           );
       }
     });
