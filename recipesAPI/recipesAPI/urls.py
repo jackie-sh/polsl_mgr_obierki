@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 from drf_yasg import openapi
 from recipesAPI import views
+from django.conf.urls import url
+from django.views.generic import TemplateView
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -34,6 +36,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', views.IndexView.as_view()),
+    url(r'^przepisy$', TemplateView.as_view(template_name='index.html')),
     path('admin/', admin.site.urls),
     path('api/auth/', include('rest_framework.urls')),
     path('', include('users.urls'), name="users"),
