@@ -181,14 +181,12 @@ export class MyProfileComponent implements OnInit {
       .deleteRecipe(recipeId)
       .pipe(
         finalize(() => {
-          this.router.navigate([`home`]);
+          window.location.reload();
           this.loaderService.hide();
         })
       )
       .subscribe(
-        (result) => {
-          window.location.reload();
-        },
+        (result) => {},
         (error) => {}
       );
   };

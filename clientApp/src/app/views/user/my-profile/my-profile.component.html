@@ -62,7 +62,9 @@
                     <ng-container *ngIf="userInfo.views">
                       {{ userInfo.views }}
                     </ng-container>
-                    <ng-container *ngIf="userInfo.views == null">
+                    <ng-container
+                      *ngIf="userInfo.views == null || userInfo.views == 0"
+                    >
                       Brak
                     </ng-container>
                   </h4>
@@ -74,7 +76,7 @@
                   <i class="fa fa-star fa-2x"></i>
                   <h4 class="count-title count-number">
                     <ng-container *ngIf="userInfo.rating">
-                      {{ userInfo.rating }}
+                      {{ userInfo.rating | number: "1.2-2" }}
                     </ng-container>
                     <ng-container *ngIf="userInfo.rating == null">
                       Brak
