@@ -16,7 +16,7 @@ class RecipeCategory(models.Model):
 class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=30, default="")
-    content = models.CharField(max_length=1000, default="")
+    content = models.CharField(max_length=10000, default="")
     shortDescription = models.CharField(max_length=100, default="")
     category = models.ForeignKey(RecipeCategory, on_delete=models.PROTECT)
     mainImage = models.ForeignKey(RecipeImage, on_delete=models.CASCADE)
