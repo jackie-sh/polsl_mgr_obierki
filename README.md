@@ -1,6 +1,6 @@
 # Przepisy kulinarne
 
-Aplikacja webowa bazująca na Django
+Aplikacja webowa bazująca na Django wykonana w celu zaliczenia projektu semestralnego z OiRPOS, PPP, PAIP.
 
 ## Description
 Aplikacja umożliwiająca wymienianie się przepisami kulinarskimi pomiędzy użytkownikami portalu wraz z możliwością dodawania komentarzy i ich oceniania.
