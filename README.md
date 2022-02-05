@@ -26,19 +26,14 @@ Ponadto użytkownicy mogą wymieniać wiadomości pomiędzy sobą komunikując s
 code blocks for commands
 ```
 
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
 ## Authors
 
 Contributors names and contact info
 
-[Michał Jankowski](michaljankowskiReal@gmail.com)  
+[Michał Jankowski](michaljankowskiReal@gmail.com)
+
 [Paweł Salicki](pawel.salicki@gmail.com)
+
 [Żaklina Osmenda](aklinaoo@gmail.com)
 
 ## Version History
