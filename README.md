@@ -23,15 +23,24 @@ Aplikacja została przetestowana pod system Windows 10 20H2. Należy zaciągnąc
 * Node.js==15.11.0
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* sklonowanie repozytorium
+* instalacja Python 3, Django
+* instalacja Node.js, Angular
+* przejście do folderu ClientApp i wywołanie poniższych komend
+```
+npm install -g @angular/cli
+npm install all
+```
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
+* W celu uruchomienia serwera należy przejść do folderu recipesAPI i wywołanie komendy w konsoli:
 ```
-code blocks for commands
+python manage.py runserver
+```
+* W celu uruchomienia aplikacji klienckiej (przeglądarki) należy przejść do folderu ClientApp i uruchomić komendę w konsoli:
+```
+ng serve --open
 ```
 
 ## Authors
