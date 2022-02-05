@@ -37,13 +37,22 @@ command to run if program contains helper info
 
 Contributors names and contact info
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+[Michał Jankowski](michaljankowskiReal@gmail.com)  
+[Paweł Salicki](pawel.salicki@gmail.com)
+[Żaklina Osmenda](aklinaoo@gmail.com)
 
 ## Version History
-
+* 0.5
+    * Final version
+    * Hotfix for user permission elevation
+* 0.4
+    * Set handling recipes and rating in webapp
+    * Introduced sockets for user messages handling
+* 0.3
+    * Added Subapp for users and introduced Angular for frontend
+    * Fix for missing user endpoint
 * 0.2
-    * Various bug fixes and optimizations
+    * First app and Django integration
     * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
